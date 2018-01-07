@@ -18,8 +18,8 @@ require.config({
 require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl"],
 function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch) {
     
-    Handlebars.registerHelper('ifcolor', function(a, options){
-        if(a>0) {
+    Handlebars.registerHelper('ifColor', function(a, options){
+        if(a>=0) {
             return options.fn(this);
         }
         else{
@@ -80,8 +80,9 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
         soloProd : products
     };
     
-    $(".research").html(templateResearch());
-    $(".buttons").html(templateButtons(buttons));
-    $(".recap").html(templateRecap(line));
+    $("#research").html(templateResearch());
+    $("#buttons").html(templateButtons(buttons));
+    $("#recap").html(templateRecap(line));
+    $("#histo").html(templateHisto());
     
 });
