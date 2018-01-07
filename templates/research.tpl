@@ -1,0 +1,1 @@
+logo - Nom <input type="text" id="nameSearch" />   logo - Numéro <input type="text" id="numberSearch" />
