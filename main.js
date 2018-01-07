@@ -37,44 +37,44 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     
     var products = [
         {
-          name : "test",
-          price : "test"
+          name : "A",
+          price : "p1"
         },
         {
-          name : "test",
-          price : "test"
+          name : "B",
+          price : "p2"
         },
         {
-          name : "test",
-          price : "test"
+          name : "C",
+          price : "p3"
         },
         {
-          name : "test",
-          price : "test"
+          name : "D",
+          price : "p4"
         },
         {
-          name : "test",
-          price : "test"
+          name : "E",
+          price : "p5"
         },
         {
-          name : "test",
-          price : "test"
+          name : "F",
+          price : "p6"
         }
     ];
     
     var buttons = {
         formules : [
             {
-                name : "test",
-                price : "test"
+                name : "f1",
+                price : "P1"
             },
             {
-                name : "test",
-                price : "test"
+                name : "f2",
+                price : "P2"
             },
             {
-                name : "test",
-                price : "test"
+                name : "f3",
+                price : "P3"
             }
         ],
         soloProd : products
