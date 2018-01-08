@@ -19,7 +19,7 @@ require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/coun
 function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch) {
     
     Handlebars.registerHelper('ifColor', function(a, options){
-        if(a > 0) {
+        if(a>=0) {
             return options.fn(this);
         }
         else{
