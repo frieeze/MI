@@ -18,8 +18,8 @@ require.config({
 require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl"],
 function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch) {
     
-    Handlebars.registerHelper('ifcolor', function(a, options){
-        if(a>0) {
+    Handlebars.registerHelper('ifColor', function(a, options){
+        if(a > 0) {
             return options.fn(this);
         }
         else{
@@ -37,51 +37,52 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     
     var products = [
         {
-          name : "test",
-          price : "test"
+          name : "A",
+          price : "p1"
         },
         {
-          name : "test",
-          price : "test"
+          name : "B",
+          price : "p2"
         },
         {
-          name : "test",
-          price : "test"
+          name : "C",
+          price : "p3"
         },
         {
-          name : "test",
-          price : "test"
+          name : "D",
+          price : "p4"
         },
         {
-          name : "test",
-          price : "test"
+          name : "E",
+          price : "p5"
         },
         {
-          name : "test",
-          price : "test"
+          name : "F",
+          price : "p6"
         }
     ];
     
     var buttons = {
         formules : [
             {
-                name : "test",
-                price : "test"
+                name : "f1",
+                price : "P1"
             },
             {
-                name : "test",
-                price : "test"
+                name : "f2",
+                price : "P2"
             },
             {
-                name : "test",
-                price : "test"
+                name : "f3",
+                price : "P3"
             }
         ],
         soloProd : products
     };
     
-    $(".research").html(templateResearch());
-    $(".buttons").html(templateButtons(buttons));
-    $(".recap").html(templateRecap(line));
+    $("#research").html(templateResearch());
+    $("#buttons").html(templateButtons(buttons));
+    $("#recap").html(templateRecap(line));
+    $("#histo").html(templateHisto());
     
 });
