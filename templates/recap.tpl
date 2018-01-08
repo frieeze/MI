@@ -1,4 +1,4 @@
 <h3>Commande :</h3>
-{{#each line}}
+{{#each this}}
     {{name}} - {{price}} € - {{quantity}}
 {{/each}}

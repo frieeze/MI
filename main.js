@@ -33,7 +33,44 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     var templateRecap = Handlebars.compile(templRecap);
     var templateResearch = Handlebars.compile(templResearch);
     
-    var line = new Array();
+    var line = [
+        {
+            name:"PJF",
+            price: "3",
+            quantity: "1"
+        },
+        {
+            name:"SJF",
+            price: "4",
+            quantity: "5"
+        },
+        {
+            name:"PPC",
+            price: "6",
+            quantity: "2"
+        }
+    ];
+    
+    var test = [ 
+        {
+            date: "a",
+            soldeBefore: "0",
+            soldeAfter: "3",
+            price : "4"
+        },
+        {
+            date: "b",
+            soldeBefore: "10",
+            soldeAfter: "23",
+            price : "34"
+        },
+        {
+            date: "c",
+            soldeBefore: "40",
+            soldeAfter: "é",
+            price : "()"
+        }
+    ];
     
     var products = [
         {
@@ -83,6 +120,6 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     $("#research").html(templateResearch());
     $("#buttons").html(templateButtons(buttons));
     $("#recap").html(templateRecap(line));
-    $("#histo").html(templateHisto());
+    $("#histo").html(templateHisto(test));
     
 });
