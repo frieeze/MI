@@ -1,12 +1,13 @@
-var http = require('http');
-var server = require('express')();
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/MI');
-var app = http.Server(server);
-var io = require('socket.io')(app);
 mongoose.connection.once('connected', function(){
 	console.log("Database connected successfully");
 });
+server.listen(80);
+
 
 var comCount = 0;
 var tplCompte = new mongoose.Schema({
@@ -70,8 +71,37 @@ io.sockets.on('accName', function(socket){
 	})
 })
 
-server.get('*',function(req, res){
-	res.sendFile(__dirname + req.url);
-})
 
-server.listen(8080);
+app.get('*',function(req, res){
+	res.sendFile(__dirname + req.url);
+});
+/*app.get('/libs/*',function(req, res){
+	res.sendFile(__dirname + req.url);
+});
+app.get('/assets/*',function(req, res){
+	res.sendFile(__dirname + req.url);
+});
+app.get('/templates/*',function(req, res){
+	res.sendFile(__dirname + req.url);
+});
+app.get('/css/*',function(req, res){
+	res.sendFile(__dirname + req.url);
+});
+app.get('/js/*',function(req, res){
+	res.sendFile(__dirname + req.url);
+});
+app.get('*.html',function(req, res){
+	res.sendFile(__dirname + req.url);
+});
+server.get('index.html',function(req, res){
+	res.sendFile(__dirname + '/index.html');
+});
+server.get('account.html',function(req, res){
+	res.sendFile(__dirname + '/account.html');
+});
+server.get('list.html',function(req, res){
+	res.sendFile(__dirname + '/list.html');
+});
+server.get('stock.html',function(req, res){
+	res.sendFile(__dirname + '/stock.html');
+});*/

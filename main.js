@@ -3,7 +3,7 @@ require.config({
     paths: {
         jquery:     'libs/jquery',
         handlebars: 'libs/handlebars',
-        text:       'libs/text'
+        text:       'libs/text',
     },
     shim: {
         jquery: {

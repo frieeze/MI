@@ -6,6 +6,10 @@
 		<link rel="stylesheet" href="./css/main.css" />
 	</head>
 	<body>
+		<script src="http://localhost/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io.connect('http://localhost:8080');
+		</script>
         <header>
             <a id="Accueil" href="./index">Maison ISEN</a> <span id="logged">Accès Vendeur</span> - Mot de passe :  <input type="text" name="password" text="password"/>
             <a href="./list">Comptes</a>  <a href="./stocks.html">Stocks</a> <a href="./list.html">Créer Compte</a>
@@ -33,6 +37,6 @@
         <footer>
             <p>&copy; Maison ISEN - Chez MaMi - 2018</p> 
         </footer>
-	<script src="libs/require.js" data-main="main.js"></script>
+	<script src="libs/require.js" data-main="js/main.js"></script>
   </body>
 </html>
