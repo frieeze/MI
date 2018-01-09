@@ -3,8 +3,7 @@ require.config({
     paths: {
         jquery:     'libs/jquery',
         handlebars: 'libs/handlebars',
-        text:       'libs/text',
-        socketio:   '/socket.io/socket.io'
+        text:       'libs/text'
     },
     shim: {
         jquery: {
@@ -12,22 +11,18 @@ require.config({
         },
         handlebars: {
             exports: 'Handlebars'
-        },
-        socketio: {
-            exports: 'io'
         }
 
     }
 });
 
 
-require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","socketio"],
-function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch,io) {
+require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","account.js","list.js"/*,"stocks.js"*/],
+function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
     
-    var socket = io.connect('http://localhost:8080');
+    //var socket = io.connect('http://localhost:8080');
     
     var password = "MaisonISEN";
-    admin = false;
     
     Handlebars.registerHelper('ifColor', function(a, options){
         if(a>=0) {
@@ -37,56 +32,229 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
             return options.inverse(this);
         }
     });
+    
+    //-------------------Fonction cookies-------------------------
+    function createCookie(name,value,days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime()+(days*24*60*60*1000));
+            var expires = "; expires="+date.toGMTString();
+        }
+        else var expires = "";
+        document.cookie = name+"="+value+expires+"; path=/";
+    }
 
-    var templateButtons = Handlebars.compile(templButtons);
-    var templateCount = Handlebars.compile(templCount);
-    var templateHisto = Handlebars.compile(templHisto);
-    var templateRecap = Handlebars.compile(templRecap);
-    var templateResearch = Handlebars.compile(templResearch);
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    function eraseCookie(name) {
+        createCookie(name,"",-1);
+    }
+    //-----------------------------------------------------
+
+    if(readCookie('admin') == null || readCookie('admin') == 'false'){
+        admin = false;
+    }
+    else if(readCookie('admin') == 'true'){
+        admin = true;
+        $("#password").val('');
+        $("#password").hide();
+        $("#mdp").hide();
+        $("#delog").show();
+        if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
+            $("#suppr").show();
+        }
+    }
+    
+    
+    
+    if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
+        var templateButtons = Handlebars.compile(templButtons);
+        var templateCount = Handlebars.compile(templCount);
+        var templateHisto = Handlebars.compile(templHisto);
+        var templateRecap = Handlebars.compile(templRecap);
+        var templateResearch = Handlebars.compile(templResearch);
+    }
+    
+    if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
+        var accountView = new AccountController();
+    }
+    
+    if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "list.html"){
+        var listView = new ListController();
+    }
     
     var line = new Array();
     
-    var products = [
+    var products = [ //ajouter tag a chaque produit
         {
-          name : "A",
-          price : 1
+          name : "Coca",
+          tag : "coca",
+          price : 0.8
         },
         {
-          name : "B",
+          name : "Fanta",
+          price : "0,8"
+        },
+        {
+          name : "Oasis",
+          price : "0,8"
+        },
+        {
+          name : "Kinder Bueno",
+          tag : "kinderbueno",
+          price : 0.8
+        },
+        {
+          name : "7UP",
+          price : "0,8"
+        },
+        {
+          name : "Coca",
+          price : "0,8"
+        },
+        {
+          name : "Fanta",
+          price : "0,8"
+        },
+        {
+          name : "Oasis",
+          price : "0,8"
+        },
+        {
+          name : "Kinder Bueno",
+          price : "0,8"
+        },
+        {
+          name : "7UP",
+          price : "0,8"
+        },
+        {
+          name : "M&M's",
+          price : "0,8"
+        },
+        {
+          name : "Granola",
+          price : "0,8"
+        },
+        {
+          name : "Minute Maid",
+          price : "0,8"
+        },
+        {
+          name : "KitKat",
+          price : "0,8"
+        },
+        {
+          name : "Fanta",
+          price : "0,8"
+        },
+        {
+          name : "Oasis",
+          price : "0,8"
+        },
+        {
+          name : "Kinder Bueno",
+          price : "0,8"
+        },
+        {
+          name : "7UP",
+          price : "0,8"
+        },
+        {
+          name : "M&M's",
+          price : "0,8"
+        },
+        {
+          name : "Granola",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Minute Maid",
+          price : "0,8"
+        },
+        {
+          name : "KitKat",
+          price : "0,8"
+        },
+        {
+          name : "M&M's",
+          price : "0,8"
+        },
+        {
+          name : "Granola",
+          price : "0,8"
+        },
+        {
+          name : "Minute Maid",
+          price : "0,8"
+        },
+        {
+          name : "KitKat",
+          price : "0,8"
+        },
+        {
+          name : "Sandwich",
+          tag : "sandwich",
           price : 2
         },
         {
-          name : "C",
-          price : 3
+          name : "Panini",
+          tag : "panini",
+          price : 2
         },
         {
-          name : "D",
-          price : 4
+          name : "Croque",
+          tag : "croque",
+          price : 1
         },
         {
-          name : "E",
-          price : 5
+          name : "Hot Dog",
+          tag : "hot dog",
+          price : 1
         },
         {
-          name : "F",
-          price : 6
+          name : "Pasta Box",
+          tag : "pasta",
+          price : 2
         }
     ];
     
     var buttons = {
         formules : [
             {
-                name : "f1",
-                price : 7
+                name : "Formule Sandwich",
+                tag : "formSand",
+                price : 1
             },
             {
-                name : "f2",
-                price : 8
+                name : "Formule Panini",
+                tag : "formPan",
+                price : 2
             },
             {
-                name : "f3",
-                price : 9
+                name : "Formule Croques",
+                tag : "formCroq",
+                price : 3
+            },
+            {
+                name : "Formule Hot Dogs",
+                price : 4
+            },
+            {
+                name : "Formule Pasta-Box",
+                price : 5
             }
+            
         ],
         soloProd : products
     };
@@ -97,18 +265,34 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
         name : "Jean-Michel Truc",
         promo : 61,
         solde : 100,
-        numberAccount : 001,
-        histo : new Array()
+        histo : [
+            {
+               date : "01/01/18 10:01",
+               soldeBefore : 100,
+               price : 15,
+               soldeAfter: 85
+            },
+            {
+                date : "03/01/18 20:02",
+               soldeBefore : 20,
+               price : 17,
+               soldeAfter: 3
+            }
+        ],
+        numberAccount : 1
     };
     
-    $("#research").html(templateResearch());
-    $("#buttons").html(templateButtons(buttons));
-    $("#recap").html(templateRecap(line));
-    $("#histo").html(templateHisto(currentAccount.histo));
-    $("#account").html(templateCount(currentAccount));
     
+    if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
+        $("#research").html(templateResearch);
+        $("#buttons").html(templateButtons(buttons));
+        $("#recap").html(templateRecap(line));
+        $("#histo").html(templateHisto(currentAccount.histo));
+        $("#account").html(templateCount(currentAccount));
+    }
     
     $(".formule").on('click', function(){ //prix serveur si cochés 
+        console.log($("#"+$(this).attr('id')+"Price").text());
         let temp = {
             name : $(this).attr('id'),
             price : $("#"+$(this).attr('id')+"Price").text(),
@@ -118,7 +302,6 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
             return temp.name === a.name;
         }
         if(line.find(isInArray)){
-            console.log(line.find(isInArray));
             line.find(isInArray).quantity++;
         }
         else{
@@ -131,6 +314,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     });
     
     $(".prod").on('click', function(){ //prix serveur si cochés 
+        console.log($("#"+$(this).attr('id')+"Price").text());
         let temp = {
             name : $(this).attr('id'),
             price : $("#"+$(this).attr('id')+"Price").text(),
@@ -140,7 +324,6 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
             return temp.name === a.name;
         }
         if(line.find(isInArray)){
-            console.log(line.find(isInArray));
             line.find(isInArray).quantity++;
         }
         else{
@@ -172,6 +355,18 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     });
     
     $("#payer").on('click', function(){
+        if(currentAccount == undefined){
+            window.alert("Impossible, pas de compte choisi");
+            price = 0;
+            $("#total").empty();
+            $("#total").html(price);
+            delete line;
+            line = new Array();
+            $("#recap").html(templateRecap(line));
+            $("#account").html(templateCount(currentAccount));
+            $("#histo").html(templateHisto(currentAccount.histo));
+            return;
+        }
         if(parseFloat(currentAccount.solde) - parseFloat(price) < -4){
             window.alert("Impossible, ce compte passera sous les -4€ de négatif !");
             price = 0;
@@ -217,12 +412,16 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
                 $("#password").val('');
                 $("#password").hide();
                 $("#mdp").hide();
-                //balise image .show();
+                $("#delog").show();
+                if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
+                    $("#suppr").show();
+                }
+                createCookie('admin','true',0);
             }
         }
     });
     
-    socket.on('accNum',function(socket){
+    /*socket.on('accNum',function(socket){
         console.log('reception');
         console.log(socket);
     })
@@ -233,17 +432,28 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
             socket.emit('accNum', $('input[name=numberSearch]').val())
             $("#numberSearch").val('');
         }
-    });
+    });*/
     
     
-    /*
-    $("#").on('click', function(){
+    
+    $("#delog").on('click', function(){
+        admin = false;
         $("#logged").empty();
         $("#logged").html("Vendeur");
         $("#password").show();
         $("#mdp").show();
-        //balise image .hide();
+        $("#delog").hide();
+        if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
+            $("#suppr").hide();
+        }
+        createCookie('admin','false',0);
     });
-    */
+    
+    $("#closeAccount").on('click', function(){
+        currentAccount = undefined;
+        //mettre cookie a null
+        $("#histo").html(templateHisto());
+        $("#account").empty();
+    });
     
 });
