@@ -1,11 +1,15 @@
-define(["handlebars","jquery","text!templates/histo.tpl","text!templates/research.tpl"],
-function(Handlebars,$,templHisto, templResearch) {
+define(["handlebars","jquery","text!templates/histo.tpl","text!templates/research.tpl","socketio"],
+function(Handlebars,$,templHisto, templResearch, io) {
     
     var templateHisto = Handlebars.compile(templHisto);
     var templateResearch = Handlebars.compile(templResearch);
     
     $("#research").html(templateResearch());
     $("#histo").html(templateHisto(currentAccount.histo));
+    
+    if(admin == false){
+        $("#suppr").hide();
+    }
     
     $("#ajoutRetrait").keypress(function(event){
         if(event.keyCode == 13){
@@ -27,5 +31,5 @@ function(Handlebars,$,templHisto, templResearch) {
                 $("#entry").val('');
             }
         }
-    });
+    }); //mettre emit pour changer le solde BDD
 });

@@ -1,5 +1,5 @@
-define(["handlebars","jquery","text!templates/list.tpl","text!templates/research.tpl"],
-function(Handlebars,$,templList, templResearch) {
+define(["handlebars","jquery","text!templates/list.tpl","text!templates/research.tpl", "socketio"],
+function(Handlebars,$,templList, templResearch, io) {
     
     Handlebars.registerHelper('ifColor', function(a, options){
         if(a>=0) {

@@ -3,7 +3,8 @@ require.config({
     paths: {
         jquery:     'libs/jquery',
         handlebars: 'libs/handlebars',
-        text:       'libs/text'
+        text:       'libs/text',
+        socketio:   '/socket.io/socket.io'
     },
     shim: {
         jquery: {
@@ -11,13 +12,18 @@ require.config({
         },
         handlebars: {
             exports: 'Handlebars'
+        },
+        socketio: {
+            exports: 'io'
         }
     }
 });
 
 
-require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl"],
-function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch) {
+require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","socketio"],
+function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch,io) {
+    
+    var socket = io.connect('http://localhost:8080');
     
     var password = "MaisonISEN";
     admin = false;
@@ -195,7 +201,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
         $("#recap").html(templateRecap(line));
         $("#soldeSpan").html(currentAccount.solde);
         $("#histo").html(templateHisto(currentAccount.histo));
-    });
+    }); //mettre emit pour changer le solde BDD
     
     $("#linkAccount").on('click', function(){
         document.location.href="./account.html";
@@ -215,10 +221,16 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
         }
     });
     
+    socket.on('accNum',function(socket){
+        console.log('reception');
+        console.log(socket);
+    })
+    
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
-            //requete
-            //currentAccount changé
+            console.log('emit');
+            socket.emit('accNum', $('input[name=numberSearch]').val())
+            $("#numberSearch").val('');
         }
     });
     
