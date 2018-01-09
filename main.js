@@ -74,45 +74,144 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     
     var products = [
         {
-          name : "A",
-          price : "p1"
+          name : "Coca",
+          price : "0,8"
         },
         {
-          name : "B",
-          price : "p2"
+          name : "Fanta",
+          price : "0,8"
         },
         {
-          name : "C",
-          price : "p3"
+          name : "Oasis",
+          price : "0,8"
         },
         {
-          name : "D",
-          price : "p4"
+          name : "Kinder Bueno",
+          price : "0,8"
         },
         {
-          name : "E",
-          price : "p5"
+          name : "7UP",
+          price : "0,8"
         },
         {
-          name : "F",
-          price : "p6"
+          name : "Coca",
+          price : "0,8"
+        },
+        {
+          name : "Fanta",
+          price : "0,8"
+        },
+        {
+          name : "Oasis",
+          price : "0,8"
+        },
+        {
+          name : "Kinder Bueno",
+          price : "0,8"
+        },
+        {
+          name : "7UP",
+          price : "0,8"
+        },
+        {
+          name : "M&M's",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Granola",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Minute Maid",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "KitKat",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Fanta",
+          price : "0,8"
+        },
+        {
+          name : "Oasis",
+          price : "0,8"
+        },
+        {
+          name : "Kinder Bueno",
+          price : "0,8"
+        },
+        {
+          name : "7UP",
+          price : "0,8"
+        },
+        {
+          name : "M&M's",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Granola",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Minute Maid",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "KitKat",
+          price : "0,8"
+        },
+        {
+          name : "M&M's",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Granola",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "Minute Maid",
+          price : "0,8"
+        }
+        ,
+        {
+          name : "KitKat",
+          price : "0,8"
         }
     ];
     
     var buttons = {
         formules : [
             {
-                name : "f1",
+                name : "Formule Sandwich",
                 price : "P1"
             },
             {
-                name : "f2",
+                name : "Formule Panini",
                 price : "P2"
             },
             {
-                name : "f3",
+                name : "Formule Croques",
                 price : "P3"
+            },
+            {
+                name : "Formule Hot Dogs",
+                price : "0,8"
+            },
+            {
+                name : "Formule Pasta-Box",
+                price : "0,8"
             }
+            
         ],
         soloProd : products
     };
@@ -120,8 +219,8 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     var currentAccount = {
         name : "Jean-Michel Truc",
         promo : 61,
-        solde : 100,
-        numberAccount : 001
+        solde : 1200,
+        numberAccount : 1
     };
     
     $("#research").html(templateResearch());
