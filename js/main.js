@@ -3,9 +3,13 @@ require.config({
     paths: {
         jquery:     'libs/jquery',
         handlebars: 'libs/handlebars',
-        text:       'libs/text'
+        text:       'libs/text',
+        socketio:   '/socket.io/socket.io'
     },
     shim: {
+        socketio: {
+            export: 'io'
+        },
         jquery: {
             exports: '$'
         },
@@ -17,8 +21,8 @@ require.config({
 });
 
 
-require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl"],
-function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch) {
+require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl"],
+function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch) {
     
     var password = "MaisonISEN";
     admin = false;
