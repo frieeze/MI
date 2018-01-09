@@ -117,9 +117,17 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
         soloProd : products
     };
     
+    var currentAccount = {
+        name : "Jean-Michel Truc",
+        promo : 61,
+        solde : 100,
+        numberAccount : 001
+    };
+    
     $("#research").html(templateResearch());
     $("#buttons").html(templateButtons(buttons));
     $("#recap").html(templateRecap(line));
     $("#histo").html(templateHisto(test));
+    $("#account").html(templateCount(currentAccount));
     
 });
