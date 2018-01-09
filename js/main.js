@@ -22,10 +22,10 @@ require.config({
 
 
 
-require([/*"socketio",*/"handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
+require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
     
-    //var socket = io.connect('http://localhost:8080'); 
+    var socket = io.connect('http://localhost:8080'); 
     var password = "MaisonISEN";
     
     Handlebars.registerHelper('ifColor', function(a, options){
@@ -298,7 +298,6 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
     }
     
     $(".formule").on('click', function(){ //prix serveur si cochés 
-        console.log($("#"+$(this).attr('id')+"Price").text());
         let temp = {
             name : $("#"+$(this).attr('id')+"Name").text(),
             price : $("#"+$(this).attr('id')+"Price").text(),
@@ -306,6 +305,9 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         };
         function isInArray(a){
             return temp.name === a.name;
+        }
+        if($("input[name=serveur]").is('checked')){
+            temp.price = buttons.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -320,7 +322,6 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
     });
     
     $(".prod").on('click', function(){ //prix serveur si cochés 
-        console.log($("#"+$(this).attr('id')+"Price").text());
         let temp = {
             name : $("#"+$(this).attr('id')+"Name").text(),
             price : $("#"+$(this).attr('id')+"Price").text(),
@@ -328,6 +329,9 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         };
         function isInArray(a){
             return temp.name === a.name;
+        }
+        if($("input[name=serveur]").is('checked')){
+            temp.price = products.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -357,6 +361,9 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         $("#total").html(price);
         delete line;
         line = new Array();
+        if($("input[name=serveur]").is('checked')){
+            $("input[name=serveur]").prop('checked', false);
+        }
         $("#recap").html(templateRecap(line));
     });
     
@@ -368,8 +375,10 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
             $("#total").html(price);
             delete line;
             line = new Array();
+            if($("input[name=serveur]").is('checked')){
+                $("input[name=serveur]").prop('checked', false);
+            }
             $("#recap").html(templateRecap(line));
-            $("#account").html(templateCount(currentAccount));
             $("#histo").html(templateHisto(currentAccount.histo));
             return;
         }
@@ -380,6 +389,9 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
             $("#total").html(price);
             delete line;
             line = new Array();
+            if($("input[name=serveur]").is('checked')){
+                $("input[name=serveur]").prop('checked', false);
+            }
             $("#recap").html(templateRecap(line));
             $("#account").html(templateCount(currentAccount));
             $("#histo").html(templateHisto(currentAccount.histo));
@@ -400,6 +412,9 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         delete line;
         line = new Array();
         currentAccount.histo.push(temp);
+        if($("input[name=serveur]").is('checked')){
+            $("input[name=serveur]").prop('checked', false);
+        }
         $("#recap").html(templateRecap(line));
         $("#soldeSpan").html(currentAccount.solde);
         $("#histo").html(templateHisto(currentAccount.histo));
@@ -427,18 +442,18 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         }
     });
     
-    /*socket.on('accNum',function(socket){
+    socket.on('account',function(socket){
         console.log('reception');
         console.log(socket);
     })
     
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
-            console.log('emit');
-            socket.emit('accNum', $('input[name=numberSearch]').val())
+            console.log('emit numero :'+$('input[name=numberSearch]').val());
+            socket.emit('accNum', {num: $('input[name=numberSearch]').val()})
             $("#numberSearch").val('');
         }
-    });*/
+    });
     
     
     
