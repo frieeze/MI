@@ -16,6 +16,7 @@ require.config({
         socketio: {
             exports: 'io'
         }
+
     }
 });
 
@@ -107,7 +108,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     $("#account").html(templateCount(currentAccount));
     
     
-    $(".formule").on('click', function(){
+    $(".formule").on('click', function(){ //prix serveur si cochés 
         let temp = {
             name : $(this).attr('id'),
             price : $("#"+$(this).attr('id')+"Price").text(),
@@ -129,7 +130,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
         $("#recap").html(templateRecap(line));
     });
     
-    $(".prod").on('click', function(){
+    $(".prod").on('click', function(){ //prix serveur si cochés 
         let temp = {
             name : $(this).attr('id'),
             price : $("#"+$(this).attr('id')+"Price").text(),
