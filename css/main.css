@@ -46,20 +46,20 @@ footer p {
 }
 
 .table {
-    border: solid #0000 1px;
+    border: solid #000 1px;
     padding: 2px;
-    margin: 1px;
+    margin: 15px;
 }
 
 .formule {
-    border: solid #0000 1px;
+    border: solid #000 1px;
     padding: 2px;
     margin: 1px;
     background-color: skyblue;
 }
 
-.soloProd {
-    border: solid #0000 1px;
+.prod {
+    border: solid #000 1px;
     padding: 2px;
     margin: 1px;
     background-color: darkseagreen;
@@ -67,7 +67,8 @@ footer p {
 
 #buttons{
     display:flex;
-    justify-content: center
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .transac{

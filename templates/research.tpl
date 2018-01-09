@@ -1,1 +1,1 @@
-<img width="20px" height="20px" src="./assets/account2.png"/> <input placeholder="Nom" type="text" id="nameSearch" /> <img width="20px" height="20px" src="./assets/tools.png"/> <input placeholder="Numéro" type="text" id="numberSearch" />
+<div><img width="20px" height="20px" src="./assets/account2.png"/> <input placeholder="Nom" type="text" id="nameSearch" /></div> <div><img width="20px" height="20px" src="./assets/tools.png"/> <input placeholder="Numéro" type="text" id="numberSearch" /></div>

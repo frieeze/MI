@@ -130,4 +130,6 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     $("#histo").html(templateHisto(test));
     $("#account").html(templateCount(currentAccount));
     
+    
+    
 });
