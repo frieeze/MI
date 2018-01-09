@@ -56,34 +56,22 @@ io.sockets.on('accNum',function(socket){
 	})
 });
 
+io.sockets.on('accName', function(socket){
+	var query = compteMdl.find({nom: socket});
+	var tmpnum;
+	query.exec(function(err, acc){
+		socket.emit('account', acc);
+		tmpnum = acc.num;
+	});
+	query = allTran.find({num: tmpnum});
+	query.limit(10);
+	query.exec(function(err,acc){
+		socket.emit('accHist', acc);
+	})
+})
 
-server.get('/',function(req, res){
-	res.sendFile(__dirname + "/index.html");
-});
-server.get('/index.html',function(req, res){
-	res.sendFile(__dirname + "/index.html");
-});
-server.get('/account', function(req, res){
-	res.sendFile(__dirname + "/account.html");
-});
-server.get('/account.html', function(req, res){
-	res.sendFile(__dirname + "/account.html");
-});
-server.get('/list', function(req, res){
-	res.sendFile(__dirname + "/list.html");
-});
-server.get('/list.html', function(req, res){
-	res.sendFile(__dirname + "/list.html");
-});
-server.get('/stocks', function(req, res){
-	res.sendFile(__dirname + "/stocks.html");
-});
-server.get('/stocks.html', function(req, res){
-	res.sendFile(__dirname + "/stocks.html");
-});
-server.use(function(req, res, next){
-    res.setHeader('Content-Type', 'text/plain');
-    res.send(404, 'Page introuvable !');
-});
+server.get('*',function(req, res){
+	res.sendFile(__dirname + req.url);
+})
 
 server.listen(8080);

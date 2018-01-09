@@ -1,5 +1,4 @@
 all:
-	sudo -i
-	apt install nodejs mongodb
+	sudo apt install nodejs* mongodb npm
 	npm install express mongoose socket.io
-	service mongod start
+	sudo service mongod start
