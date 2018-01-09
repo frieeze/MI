@@ -193,7 +193,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
         line = new Array();
         currentAccount.histo.push(temp);
         $("#recap").html(templateRecap(line));
-        $("#account").html(templateCount(currentAccount));
+        $("#soldeSpan").html(currentAccount.solde);
         $("#histo").html(templateHisto(currentAccount.histo));
     });
     
@@ -203,14 +203,34 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     
     $("#password").keypress(function(event){
         if(event.keyCode == 13){
-            console.log($('input[name=password]').val());
-            console.log(password);
             if($('input[name=password]').val() == password){
                 admin = true;
                 $("#logged").empty();
-                $("#logged").html("Accès Admin");
+                $("#logged").html("Administrateur");
+                $("#password").val('');
+                $("#password").hide();
+                $("#mdp").hide();
+                //balise image .show();
             }
         }
     });
+    
+    $("#numberSearch").keypress(function(event){
+        if(event.keyCode == 13){
+            //requete
+            //currentAccount changé
+        }
+    });
+    
+    
+    /*
+    $("#").on('click', function(){
+        $("#logged").empty();
+        $("#logged").html("Vendeur");
+        $("#password").show();
+        $("#mdp").show();
+        //balise image .hide();
+    });
+    */
     
 });

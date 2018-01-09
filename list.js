@@ -17,4 +17,8 @@ function(Handlebars,$,templList, templResearch) {
     
     $("#research").html(templateResearch());
     $("#list").html(templateList(accounts));
+    
+    $("#create").on('click', function(){
+        //créer compte avec champs
+    });
 });
