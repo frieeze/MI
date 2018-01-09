@@ -3,9 +3,13 @@ require.config({
     paths: {
         jquery:     'libs/jquery',
         handlebars: 'libs/handlebars',
-        text:       'libs/text'
+        text:       'libs/text',
+        socketio:   '/socket.io/socket.io'
     },
     shim: {
+        socketio: {
+            export: 'io'
+        },
         jquery: {
             exports: '$'
         },
@@ -17,11 +21,11 @@ require.config({
 });
 
 
-require(["handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","account.js","list.js"/*,"stocks.js"*/],
-function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
+
+require([/*"socketio",*/"handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
     
-    //var socket = io.connect('http://localhost:8080');
-    
+    //var socket = io.connect('http://localhost:8080'); 
     var password = "MaisonISEN";
     
     Handlebars.registerHelper('ifColor', function(a, options){
@@ -65,6 +69,8 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     }
     else if(readCookie('admin') == 'true'){
         admin = true;
+        $("#logged").empty();
+        $("#logged").html("Administrateur");
         $("#password").val('');
         $("#password").hide();
         $("#mdp").hide();
@@ -294,7 +300,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     $(".formule").on('click', function(){ //prix serveur si cochés 
         console.log($("#"+$(this).attr('id')+"Price").text());
         let temp = {
-            name : $(this).attr('id'),
+            name : $("#"+$(this).attr('id')+"Name").text(),
             price : $("#"+$(this).attr('id')+"Price").text(),
             quantity : 1
         };
@@ -316,7 +322,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     $(".prod").on('click', function(){ //prix serveur si cochés 
         console.log($("#"+$(this).attr('id')+"Price").text());
         let temp = {
-            name : $(this).attr('id'),
+            name : $("#"+$(this).attr('id')+"Name").text(),
             price : $("#"+$(this).attr('id')+"Price").text(),
             quantity : 1
         };
@@ -346,7 +352,7 @@ function(Handlebars,$,templButtons, templCount, templHisto, templRecap, templRes
     
     $("#liquide").on('click', function(){
         window.alert('Payé en liquide');
-        rpice = 0;
+        price = 0;
         $("#total").empty();
         $("#total").html(price);
         delete line;
