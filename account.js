@@ -5,5 +5,5 @@ function(Handlebars,$,templHisto, templResearch) {
     var templateResearch = Handlebars.compile(templResearch);
     
     $("#research").html(templateResearch());
-    $("#histo").html(templateHisto());
+    $("#histo").html(templateHisto(currentAccount.histo));
 });
