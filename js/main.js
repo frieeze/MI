@@ -620,7 +620,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     socket.on('accCreateRep', function(socket){
         console.log("test");
         let date = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
-        socket.emit('operation', {num : socket. num,prix : 12,date : date}); //valeur
+        socket.emit('operation', {num : socket. num,prix : $('#soldeCreate').val(),date : date}); //valeur
         createCookie('numAccCurr', currentAccount.numberAccount,0);
         document.location.href="./account.html";
     });
@@ -633,7 +633,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             createCookie('numAccCurr', this.attr('id'),0);
             document.location.href="./account.html";
         });
-    }); 
+    });
         
     $("#all").on('click', function(){  
         socket.emit('accAll', {num : 2});
@@ -645,7 +645,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         socket.emit('accAll', {num : 1});
     });
     $("#create").on('click', function(){
-        socket.emit('accCreate', {nom : $('input #nom').val(),prenom : $('input #prenom').val(),promo : $('input #promo').val()});
+        socket.emit('accCreate', {nom : $('#nomCreate').val(),prenom : $('#prenomCreate').val(),promo : $('#promoCreate').val()});
     });
         
 });
