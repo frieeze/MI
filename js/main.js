@@ -27,9 +27,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     var socket = io.connect('http://localhost:80'); 
     var password = "MaisonISEN";
-    
     var serveur = false;
-    
     var currentAccount = {
         name : "Jean-Michel Truc",
         promo : 61,
@@ -70,7 +68,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         else var expires = "";
         document.cookie = name+"="+value+expires+"; path=/";
     }
-
     function readCookie(name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
@@ -81,7 +78,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
         return null;
     }
-
     function eraseCookie(name) {
         createCookie(name,"",-1);
     }
@@ -103,10 +99,10 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#suppr").show();
         }
     }
-    
     if(readCookie('numAccCurr') != 'null'){
         socket.emit('accNum', {num: readCookie('numAccCurr')});
     }
+
     var templateButtons = Handlebars.compile(templButtons);
     var templateCount = Handlebars.compile(templCount);
     var templateAccount = Handlebars.compile(templAccount);
@@ -117,180 +113,248 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
         var accountView = new AccountController();
     }
-    
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "list.html"){
         var listView = new ListController();
     }
     
     var line = new Array();
-    
     var products = [ //ajouter tag a chaque produit
         {
           name : "Coca",
           tag : "coca",
-          price : 0.8
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Coca Zero",
+          tag : "cocaZ",
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Coca Cherry",
+          tag : "cocaC",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "Fanta",
-          price : "0,8"
+          tag : "fanta",
+          price : 0.8,
+		  priceS : 0.5
         },
-        {
-          name : "Oasis",
-          price : "0,8"
-        },
-        {
-          name : "Kinder Bueno",
-          tag : "kinderbueno",
-          price : 0.8
-        },
-        {
-          name : "7UP",
-          price : "0,8"
-        },
-        {
-          name : "Coca",
-          price : "0,8"
-        },
-        {
-          name : "Fanta",
-          price : "0,8"
-        },
-        {
-          name : "Oasis",
-          price : "0,8"
-        },
-        {
-          name : "Kinder Bueno",
-          price : "0,8"
-        },
-        {
-          name : "7UP",
-          price : "0,8"
-        },
-        {
-          name : "M&M's",
-          price : "0,8"
-        },
-        {
-          name : "Granola",
-          price : "0,8"
+		{
+          name : "Fanta Citron",
+          tag : "fantaC",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "Minute Maid",
-          price : "0,8"
-        },
-        {
-          name : "KitKat",
-          price : "0,8"
-        },
-        {
-          name : "Fanta",
-          price : "0,8"
+          tag : "minuteMP",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "Oasis",
-          price : "0,8"
+          tag : "oasis",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
-          name : "Kinder Bueno",
-          price : "0,8"
+          name : "Oasis PCF",
+          tag : "oasisPCF",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "7UP",
-          price : "0,8"
+          tag : "7up",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
-          name : "M&M's",
-          price : "0,8"
+          name : "Ice Tea",
+          tag : "iceTea",
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Schweppes",
+          tag : "schwp",
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Cacolac",
+          tag : "cacolac",
+          price : 0.8,
+		  priceS : 0.5
+        },
+		{
+          name : "Eau",
+          tag : "eau",
+          price : 0.5,
+		  priceS : 0.3
         },
         {
           name : "Granola",
-          price : "0,8"
-        }
-        ,
+          tag : "granola",
+          price : 0.8,
+		  priceS : 0.6
+        },
         {
-          name : "Minute Maid",
-          price : "0,8"
+          name : "Bueno",
+          tag : "bueno",
+          price : 0.8,
+		  priceS : 0.6
+        },
+        {
+          name : "Bueno White",
+          tag : "buenoW",
+          price : 0.8,
+		  priceS : 0.6	
         },
         {
           name : "KitKat",
-          price : "0,8"
+          tag : "kitkat",
+          price : 0.6,
+		  priceS : 0.3
+        },
+        {
+          name : "Skittles",
+          tag : "skittles",
+          price : 0.7,
+		  priceS : 0.5
         },
         {
           name : "M&M's",
-          price : "0,8"
+          tag : "mms",
+          price : 0.6,
+		  priceS : 0.3	
         },
         {
-          name : "Granola",
-          price : "0,8"
+          name : "Twix",
+          tag : "twix",
+          price : 0.6,
+		  priceS : 0.3
         },
         {
-          name : "Minute Maid",
-          price : "0,8"
+          name : "Snickers",
+          tag : "snickers",
+          price : 0.6,
+		  priceS : 0.3
         },
         {
-          name : "KitKat",
-          price : "0,8"
+          name : "Chips BBQ",
+          tag : "chipsB",
+          price : 0.7,
+		  priceS : 0.5
+        },
+        {
+          name : "Chips Poulet",
+          tag : "chipsP",
+          price : 0.7,
+		  priceS : 0.5
+        },
+        {
+          name : "Chips",
+          tag : "chips",
+          price : 0.7,
+		  priceS : 0.5
         },
         {
           name : "Sandwich",
           tag : "sandwich",
-          price : 2
+          price : 2,
+		  priceS : 1.5
         },
         {
           name : "Panini",
           tag : "panini",
-          price : 2
+          price : 2,
+		  priceS : 1.5
         },
         {
           name : "Croque",
           tag : "croque",
-          price : 1
+          price : 1,
+		  priceS : 0.5
         },
-        {
+		{
           name : "Hot Dog",
-          tag : "hot dog",
-          price : 1
+          tag : "hotdog",
+          price : 1,
+		  priceS : 0.5
+        },
+		{
+          name : "Croque Raclette",
+          tag : "croqueRa",
+          price : 1,
+		  priceS : 0.5
+        },
+		{
+          name : "Croque Rosette",
+          tag : "croqueRo",
+          price : 1,
+		  priceS : 0.5
         },
         {
           name : "Pasta Box",
           tag : "pasta",
-          price : 2
+          price : 2,
+		  priceS : 1.5
+        },
+		{
+          name : "Ramen",
+          tag : "ramen",
+          price : 2,
+		  priceS : 1.5
         }
     ];
-    
     var buttons = {
         formules : [
             {
-                name : "Formule Sandwich",
+                name : "Menu Sandwich",
                 tag : "formSand",
-                price : 1
+                price : 3,
+		  		priceS : 2
             },
             {
-                name : "Formule Panini",
+                name : "Menu Panini",
                 tag : "formPan",
-                price : 2
+                price : 3,
+		  		priceS : 2
             },
             {
-                name : "Formule Croques",
+                name : "Menu Croques",
                 tag : "formCroq",
-                price : 3
+                price : 3,
+		  		priceS : 2
+            },
+			{
+                name : "Menu Croques Raclette",
+                tag : "formCroqRa",
+                price : 3,
+		  		priceS : 2.3
             },
             {
-                name : "Formule Hot Dogs",
-                price : 4
+                name : "Menu Hot Dogs",
+				tag : "formHD",
+                price : 3,
+		  		priceS : 2
             },
             {
-                name : "Formule Pasta-Box",
-                price : 5
+                name : "Menu Pasta Box",
+				tag : "formPB",
+                price : 3,
+		  		priceS : 2
             }
             
         ],
         soloProd : products
     };
-    
     var price = 0;
-    
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
         $("#research").html(templateResearch);
@@ -323,7 +387,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             return temp.name === a.name;
         }
         if(serveur){
-            //temp.price = buttons.find(isInArray).priceS;
+            temp.price = buttons.find(isInArray).priceS;
             console.log("test");
         }
         if(line.find(isInArray)){
@@ -437,13 +501,13 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#total").html(price);
         delete line;
         line = new Array();
-        socket.emit('Operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
+        $("#recap").html(templateRecap(line));
         if(serveur){
             serveur = false;
             $("#serv").empty();
             $("#serv").html("Non");
         }
-        $("#recap").html(templateRecap(line));
+        socket.emit('Operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
         socket.emit('accNum', {num: currentAccount.numberAccount});
     });
     
@@ -491,8 +555,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         });
         $("#histo").html(templateHisto(currentAccount.histo));
         createCookie('numAccCurr', currentAccount.numberAccount, 0);
-    })
-    
+    });
     
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
@@ -500,8 +563,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#numberSearch").val('');
         }
     });
-    
-    
     
     $("#delog").on('click', function(){
         admin = false;
@@ -516,7 +577,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         createCookie('admin','false',0);
     });
     
-    
     var closeAcc = function(){
         currentAccount = undefined;
         createCookie('numAccCurr', null, 0);
@@ -525,7 +585,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#account").empty();
     }
     $("#closeAccount").on('click', closeAcc);
-    
     
     $("#ajoutRetrait").keypress(function(event){
         if(event.keyCode == 13){
@@ -545,9 +604,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             }
         }
     });
-        
-        
-    //fonction suppression
+    
     $("#suppr").on('click', function(){
         socket.emit('accDelete', {num:currentAccount.numberAccount});
         createCookie('numAccCurr', 'null',0);
@@ -585,7 +642,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     $("#neg").on('click', function(){
         socket.emit('accAll', {num : 1});
     });
-    
     $("#create").on('click', function(){
         socket.emit('accCreate', {nom : $('input #nom').val(),prenom : $('input #prenom').val(),promo : $('input #promo').val()});
     });

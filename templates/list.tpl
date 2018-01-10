@@ -1,5 +1,21 @@
-<button id="all">Tout les Comptes</button> -- <button id="pos">Comptes positifs</button> -- <button id="neg">Comptes négatifs</button>
-<h3>Comptes : </h3>
-{{#each this}}
-<span class="accountInfo" {{#ifColor solde}} color="green" {{else}} color="red" {{/ifColor}}>{{nom}} {{prenom}} - Promo {{promo}} - N° {{num}} - Solde : {{solde}}</span><br/>
+
+<h3>Listes des Comptes</h3>
+<button id="pos">Comptes positifs</button>
+<button id="neg">Comptes négatifs</button>
+<button id="all">Supprimer Filtres</button>
+<table class="view">
+	<tr>
+		<th>Numéro</th>
+		<th>Nom</th>
+		<th>Promo</th>
+		<th>Solde</th>
+	</tr>
+	{{#each this}}
+	<tr class="line" id="{{numberAccount}}">
+		<td>{{num}}</td>
+		<td>{{nom}} {{prenom}}</td>
+		<td>{{promo}}</td>
+		<td>{{solde}} €</td>
+	</tr>
 {{/each}}
+</table>

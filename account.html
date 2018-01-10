@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<title>MAISON ISEN</title>
 		<link rel="stylesheet" href="css/main.css" />
+		<link rel="icon" type="image/png" sizes="36x36" href="assets/android-icon-36x36.png"/>
 	</head>
 	<body>
         <header>
@@ -18,10 +19,13 @@
                 </div>
                 <div class="table" id="histo">
                 </div>
+				<div class="table" id="modif">
+					<h3>Modifier le Solde</h3>
+					<input id="ajoutRetrait" type="text" name="entry" placeholder="Nouveau Solde"/> €
+					<br/> <input type="button" id="addNFC" value="Ajouter Carte"/>
+					<input type="button" id="suppr" value="Supprimer le compte"/>
+				</div>
             </div>
-            <br/><input id="ajoutRetrait" type="text" name="entry"/>
-            <br/> <button id="addNFC">Ajouter carte</button>
-            <br/> <button id="suppr">Supprimer le compte</button>
         </div>
         <footer>
             <p>&copy; Maison ISEN - Chez MaMi - 2018</p> 

@@ -9,6 +9,7 @@ function(Handlebars,$,templHisto, templResearch, templAccount, io) {
         
         $("#research").html(templateResearch);
         $("#histo").html(templateHisto);
+		$("#info").html(templateAccount);
         
         function readCookie(name) {
             var nameEQ = name + "=";
@@ -26,7 +27,7 @@ function(Handlebars,$,templHisto, templResearch, templAccount, io) {
         }
         var socket = io.connect('http://localhost:80');
         socket.emit('accNum', {num : readCookie('numAccCurr')});
-        
+
     };
     
     return AccountController;
