@@ -45,8 +45,9 @@ testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12*3});
 testCom.save();
 
-io.sockets.on('accNum',function(socket){
-	var query = compteMdl.find({num: socket});
+io.on('accNum',function(socket){
+    console.log("accNum reçu");
+	/*var query = compteMdl.find({num: socket});
 	query.exec(function(err, acc){
 		socket.emit('account', acc);
 	});
@@ -54,7 +55,8 @@ io.sockets.on('accNum',function(socket){
 	query.limit(10);
 	query.exec(function(err,acc){
 		socket.emit('accHist', acc);
-	})
+	})*/
+    socket.emit('account', {msg: 'account send'});
 });
 
 io.sockets.on('accName', function(socket){
