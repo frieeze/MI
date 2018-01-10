@@ -22,32 +22,13 @@ require.config({
 
 
 
-require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","text!templates/list.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, templList, AccountController, ListController/*, StocksController*/) {
+require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","text!templates/list.tpl","text!templates/names.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, templList, templNames, AccountController, ListController/*, StocksController*/) {
     
-    var socket = io.connect('http://localhost:80'); 
+    var socket = io.connect('http://localhost:8080'); 
     var password = "MaisonISEN";
     var serveur = false;
-    var currentAccount = {
-        name : "Jean-Michel Truc",
-        promo : 61,
-        solde : 100,
-        histo : [
-            {
-               date : "01/01/18 10:01",
-               soldeBefore : 100,
-               price : 15,
-               soldeAfter: 85
-            },
-            {
-                date : "03/01/18 20:02",
-               soldeBefore : 20,
-               price : 17,
-               soldeAfter: 3
-            }
-        ],
-        numberAccount : 1
-    };
+    var currentAccount = undefined;
     
     Handlebars.registerHelper('ifColor', function(a, options){
         if(a>=0) {
@@ -109,6 +90,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     var templateRecap = Handlebars.compile(templRecap);
     var templateResearch = Handlebars.compile(templResearch);
     var templateList = Handlebars.compile(templList);
+    var templateNames = Handlebars.compile(templNames);
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
         var accountView = new AccountController();
@@ -361,8 +343,10 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#research").html(templateResearch);
         $("#buttons").html(templateButtons(buttons));
         $("#recap").html(templateRecap(line));
-        $("#histo").html(templateHisto(currentAccount.histo));
-        $("#account").html(templateCount(currentAccount));
+        if(currentAccount != undefined){
+            $("#histo").html(templateHisto(currentAccount.histo));
+            $("#account").html(templateCount(currentAccount));
+        }
     }
     
     $("#serveur").on('click', function(){
@@ -558,10 +542,36 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         createCookie('numAccCurr', currentAccount.numberAccount, 0);
     });
     
+    
+    socket.on('accNameRep', function(socket){
+        $("#names").html(templatesNames(socket.account));
+        $(".nameLi").on('click', function(){
+            socket.emit('accNum', {num : $(this).attr('id')});
+            $("#names").empty();
+            $("#nameSearch").val('');
+        });
+    });
+    
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
             socket.emit('accNum', {num: $('input[name=numberSearch]').val()});
             $("#numberSearch").val('');
+        }
+    });
+    
+    
+    $("#nameSearch").keypress(function(event){
+        var temp = $("#nameSearch").val()
+        if(temp.length < 3){
+            return;
+        }
+        else if(event.keyCode == 13){
+            socket.emit('accName', {name: $("#nameSearch").val()});
+            $("#names").empty();
+            $("#nameSearch").val('');
+        }
+        else{
+            socket.emit('accName', {name: $("#nameSearch").val()});
         }
     });
     
@@ -622,7 +632,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     };
     
     $("#suppr").on('click', function(){
-        socket.emit('accDelete', {num:currentAccount.numberAccount});
+        socket.emit('accDelete', {num: currentAccount.numberAccount});
         createCookie('numAccCurr', 'null',0);
         document.location.href="./index.html";
     });
@@ -634,12 +644,15 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     
     socket.on('accCreateRep', function(socket){
-        console.log("test");
+        console.log("créé");
         var date = new Date();
         var date2 = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
         var price = $('#soldeCreate').val();
-        socket.emit('operation', {num : socket.num, prix : price, date : date}); //valeur
-        createCookie('numAccCurr', currentAccount.numberAccount,0);
+        console.log(date2);
+        console.log(price);
+        console.log(socket);
+        socket.emit('operation', {num : socket.num, prix : price, date : date2}); //valeur
+        createCookie('numAccCurr', socket.num,0);
         document.location.href="./account.html";
     });
     

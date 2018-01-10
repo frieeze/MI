@@ -260,3 +260,7 @@ input{
     background-color: #fafbfc;
     font-size: 20px;
 }
+
+#slide{
+    z-index: 100;
+}

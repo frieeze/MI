@@ -6,7 +6,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/MI');
 mongoose.connection.once('connected', function(){
 	console.log("Database connected successfully");
 });
-server.listen(80);
+server.listen(8080);
 
 
 var tplCompte = new mongoose.Schema({
@@ -89,7 +89,7 @@ io.on('connection', function(socket){
 	});
 	socket.on('operation', function(info){
 		console.log("operation");
-		var query = compteMdl.find({num: number.num});
+		var query = compteMdl.find({num: info.num});
 		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
