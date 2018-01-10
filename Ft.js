@@ -10,6 +10,7 @@ server.listen(80);
 
 
 var tplCompte = new mongoose.Schema({
+	exist: {type: Boolean, default: 1},
 	prenom: String,
 	nom: String, 
 	promo: Number, 
@@ -54,9 +55,7 @@ io.on('connection', function(socket){
 		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
-			console.log(acc);
 		});
-		console.log(tmpAcc);
 		query = allTran.find({num: info.num});
 		query.limit(10);
 		query.exec(function(err,acc){
@@ -109,6 +108,7 @@ io.on('connection', function(socket){
 		var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, num: comCount+1});
 		newAcc.save();
 		socket.emit('accCreateRep', {num: newAcc.num});
+		console.log(newAcc);
 	});
 	socket.on('accDelete', function(info){
 		compteMdl.remove({num: info.num});
@@ -121,21 +121,19 @@ io.on('connection', function(socket){
 		});
 	});
 	socket.on('accAll', function(info){
+		console.log('comptes');
 		if(info.num == 2){
-			var query = compteMdl.find({});
-			var tmpAcc;
+			console.log('tous');
+			var query = compteMdl.find({exist: 1});
 			query.exec(function(err, acc){
-				tmpAcc = acc;
-			});
-			socket.emit('allAccount', {account: tmpAcc});
+				socket.emit('allAccount', {account: acc});
+			});	
 		}
 		else {
 			var query = compteMdl.find({negatif: info.num});
-			var tmpAcc;
 			query.exec(function(err, acc){
-				tmpAcc = acc;
+				socket.emit('allAccount', {account: acc});
 			});
-			socket.emit('allAccount', {account: tmpAcc});
 		}
 	});
 
