@@ -31,6 +31,7 @@ var allTran = mongoose.model('allTran', hisTran);
 
 allTran.remove({}, function(err,c){console.log("erased");});
 compteMdl.remove({}, function(err,c){console.log("erase");});
+var comCount;
 compteMdl.count({}, function(err,c){
 	comCount = c;
 });
@@ -49,7 +50,7 @@ io.on('connection', function(socket){
 	socket.on('accNum', function(number){
 		console.log("accNum reçu");
 		var query = compteMdl.find({num: number.num});
-		let tmpAcc;
+		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
 		});
@@ -61,7 +62,7 @@ io.on('connection', function(socket){
 	});
 	socket.on('accName', function(name){
 		var query = compteMdl.find({nom: name.tpl});
-		let tmpAcc;
+		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
 		});
@@ -73,7 +74,7 @@ io.on('connection', function(socket){
 	});
 	socket.on('accNFC', function(serial){
 		var query = compteMdl.find({idCarte: serial.carte});
-		let tmpAcc;
+		var tmpAcc;
 		query.exec(function(err,acc){
 			tmpAcc = acc;
 		});
@@ -85,7 +86,7 @@ io.on('connection', function(socket){
 	});
 	socket.on('operation', function(data){
 		var query = compteMdl.find({num: number.num});
-		let tmpAcc;
+		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
 		});
@@ -95,7 +96,7 @@ io.on('connection', function(socket){
 		tmpAcc.save();
 	});
 	socket.on('accCreate', function(info){
-		let comCount;
+		var comCount;
 		compteMdl.count({}, function(err,c){
 			comCount = c;
 		});
