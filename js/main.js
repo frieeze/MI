@@ -28,6 +28,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     var socket = io.connect('http://localhost:8080'); 
     var password = "MaisonISEN";
     var serveur = false;
+    var entryNFC = false;
     var currentAccount = undefined;
     
     Handlebars.registerHelper('ifColor', function(a, options){
@@ -81,7 +82,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     }
     
     console.log(document.cookie.indexOf('numAccCurr'));
-    if(document.cookie.indexOf('numAccCurr') != -1){
+    if(document.cookie.indexOf('numAccCurr') != -1 && document.location.href.lastIndexOf( "/" )+1  != "list.html"){
         socket.emit('accNum', {num: readCookie('numAccCurr')});
         console.log('found');
     }
@@ -390,7 +391,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
         price = parseFloat(price) + parseFloat(temp.price);
         price = price.toFixed(2);
-        Math.round(price*100)/100;
         $("#total").empty();
         $("#total").html(price);
         $("#recap").html(templateRecap(line));
@@ -553,8 +553,10 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     
-    socket.on('accNameRep', function(socket){
-        $("#names").html(templatesNames(socket.account));
+    socket.on('accNameRep', function(sockets){
+        console.log("retour");
+        console.log(sockets);
+        $("#names").html(templateNames(sockets.account));
         $(".nameLi").on('click', function(){
             socket.emit('accNum', {num : $(this).attr('id')});
             $("#names").empty();
@@ -572,7 +574,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     $("#nameSearch").keypress(function(event){
         var temp = $("#nameSearch").val()
-        if(temp.length < 3){
+        if(temp.length < 2){
             return;
         }
         else if(event.keyCode == 13){
@@ -581,6 +583,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#nameSearch").val('');
         }
         else{
+            console.log("envoi");
             socket.emit('accName', {name: $("#nameSearch").val()});
         }
     });
@@ -608,7 +611,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     $("#ajoutRetrait").keypress(function(event){
         if(event.keyCode == 13){
-            if(currentAccount.solde - $('#ajoutRetrait').val() > -4){
+            if(parseFloat(currentAccount.solde) + parseFloat($('#ajoutRetrait').val()) > -4){
                 let date = new Date();
                 let temp = {
                     date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
@@ -642,6 +645,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     };
     
     $("#suppr").on('click', function(){
+        console.log("suppr ", currentAccount.numberAccount);
         socket.emit('accDelete', {num: currentAccount.numberAccount});
         eraseCookie('numAccCurr');
         document.location.href="./index.html";
@@ -649,7 +653,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         
     //fonction ajout NFC
     $("#addNFC").on('click', function(){
-         socket.emit('NFC', {num : currentAccount.numberAccount, carte : 0/*ajouter NFC*/});
+        entryNFC = true;
     });
     
     
