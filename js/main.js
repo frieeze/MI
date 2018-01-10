@@ -80,7 +80,9 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
     }
     
-    
+    if(readCookie('numAccCurr') != null){
+        socket.emit('accNum', {num: readCookie('numAccCurr')});
+    }
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
         var templateButtons = Handlebars.compile(templButtons);
@@ -92,6 +94,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
         var accountView = new AccountController();
+        console.log("test");
     }
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "list.html"){
@@ -306,7 +309,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("input[name=serveur]").is('checked')){
+        if($("#serveur").is('checked')){
             temp.price = buttons.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
@@ -330,7 +333,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("input[name=serveur]").is('checked')){
+        if($("#serveur").is('checked')){
             temp.price = products.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
@@ -443,11 +446,31 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     socket.on('account',function(socket){
+        delete currentAccount;
+        currentAccount = {
+            name : socket.account[0].prenom + " " + socket.account[0].nom,
+            promo : socket.account[0].promo,
+            solde : socket.account[0].solde, 
+            numberAccount : socket.account[0].num
+        };
+        $("#account").html(templateCount(currentAccount));
+        $("#closeAccount").on('click', delog);
+        $("#linkAccount").on('click', function(){
+            document.location.href="./account.html";
+        });
+        $("#histo").html(templateHisto());
+        createCookie('numAccCurr', currentAccount.numberAccount, 0);
+    })
+    
+    socket.on('accHist',function(socket){
         console.log('reception');
+        console.log(socket);
+        
+        $("#histo").html(templateHisto());
+    })
     
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
-            console.log('emit numero :'+$('input[name=numberSearch]').val());
             socket.emit('accNum', {num: $('input[name=numberSearch]').val()});
             $("#numberSearch").val('');
         }
@@ -468,11 +491,14 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         createCookie('admin','false',0);
     });
     
-    $("#closeAccount").on('click', function(){
+    
+    var delog = function(){
         currentAccount = undefined;
+        createCookie('numAccCurr', null, 0);
         //mettre cookie a null
         $("#histo").html(templateHisto());
         $("#account").empty();
-    });
+    }
+    $("#closeAccount").on('click', delog);
     
 });
