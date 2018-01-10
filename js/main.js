@@ -25,7 +25,7 @@ require.config({
 require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
 function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
     
-    var socket = io.connect('http://localhost:8080'); 
+    var socket = io.connect('http://localhost:80'); 
     var password = "MaisonISEN";
     
     Handlebars.registerHelper('ifColor', function(a, options){
@@ -450,7 +450,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
             console.log('emit numero :'+$('input[name=numberSearch]').val());
-            socket.emit('accNum', {num: $('input[name=numberSearch]').val()})
+            socket.emit('accNum', {num: $('input[name=numberSearch]').val()});
             $("#numberSearch").val('');
         }
     });

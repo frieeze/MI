@@ -45,21 +45,23 @@ testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12*3});
 testCom.save();
 
-io.on('accNum',function(socket){
-    console.log("accNum reçu");
-	/*var query = compteMdl.find({num: socket});
-	query.exec(function(err, acc){
-		socket.emit('account', acc);
+
+io.on('connection', function(socket){
+	socket.on('accNum', function(number){
+		console.log("accNum reçu");
+		var query = compteMdl.find({num: number.num});
+		query.exec(function(err, acc){
+			socket.emit('account', {account: acc});
+		});
+		query = allTran.find({num: number.num});
+		query.limit(10);
+		query.exec(function(err,acc){
+			socket.emit('accHist', {account: acc});
+		});
 	});
-	query = allTran.find({num: socket});
-	query.limit(10);
-	query.exec(function(err,acc){
-		socket.emit('accHist', acc);
-	})*/
-    socket.emit('account', {msg: 'account send'});
 });
 
-io.sockets.on('accName', function(socket){
+/*io.sockets.on('accName', function(socket){
 	var query = compteMdl.find({nom: socket});
 	var tmpnum;
 	query.exec(function(err, acc){
@@ -71,7 +73,7 @@ io.sockets.on('accName', function(socket){
 	query.exec(function(err,acc){
 		socket.emit('accHist', acc);
 	})
-})
+})*/
 
 
 app.get('*',function(req, res){
