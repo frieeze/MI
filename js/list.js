@@ -1,5 +1,5 @@
-define(["handlebars","jquery","text!templates/list.tpl","text!templates/research.tpl"],
-function(Handlebars,$,templList, templResearch) {
+define(["handlebars","jquery","text!templates/list.tpl","text!templates/research.tpl", "socketio"],
+function(Handlebars,$,templList, templResearch, io) {
     
     var ListController = function(){
         Handlebars.registerHelper('ifColor', function(a, options){
@@ -10,6 +10,21 @@ function(Handlebars,$,templList, templResearch) {
                 return options.inverse(this);
             }
         });
+        
+        var socket = io.connect('http://localhost:80');
+        
+        //de base requete pour afficher tout les comptes
+        
+        function createCookie(name,value,days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime()+(days*24*60*60*1000));
+                var expires = "; expires="+date.toGMTString();
+            }
+            else var expires = "";
+            document.cookie = name+"="+value+expires+"; path=/";
+        }
+
 
         var accounts = [
             {
@@ -33,8 +48,29 @@ function(Handlebars,$,templList, templResearch) {
         $("#list").html(templateList(accounts));
 
         $("#create").on('click', function(){
-            //créer compte avec champs
+            //créer compte avec champs -> emit avec les variables
+            createCookie('numAccCurr', /*Mettre Num compte*/,0);
+            document.location.href="./account.html";
         });
+        
+        $(".line").on('click', function(){
+            createCookie('numAccCurr', this.attr('id'),0);
+            document.location.href="./account.html";
+        })
+        
+        
+        //fonction de reception de la requete pour stocker les lignes et refresh la vue
+        
+        $("#all").on('click', function(){  
+            //emit avec valeur 0
+        });
+        $("#pos").on('click', function(){
+            //emit avec valeur 1
+        });
+        $("#neg").on('click', function(){
+            //emit avec valeur 2
+        });
+        
     };
     
     return ListController;

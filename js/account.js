@@ -26,6 +26,8 @@ function(Handlebars,$,templHisto, templResearch, templAccount, io) {
         }
         var socket = io.connect('http://localhost:80');
         socket.emit('accNum', {num : readCookie('numAccCurr')});
+        
+        //fonction de reception apres ajoutRetrait
 
         $("#ajoutRetrait").keypress(function(event){
             if(event.keyCode == 13){
@@ -33,13 +35,9 @@ function(Handlebars,$,templHisto, templResearch, templAccount, io) {
                     let date = new Date();
                     let temp = {
                         date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
-                        soldeBefore: currentAccount.solde,
-                        soldeAfter: currentAccount.solde - $('input[name=entry]').val(),
                         price : $('input[name=entry]').val()
                     }
-                    currentAccount.solde = currentAccount.solde - $('input[name=entry]').val();
-                    currentAccount.histo.push(temp);
-                    $("#histo").html(templateHisto(currentAccount.histo));
+                    //emit requete avec arg price et date, et refresh de toutes les vues 
                     $("#entry").val('');
                 }
                 else{
