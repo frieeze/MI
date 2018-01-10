@@ -50,6 +50,17 @@ testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12*3});
 testCom.save();*/
 
+var uid = ""; 
+console.log(uid); 
+var SerialPort = require('serialport');
+const ByteLength = SerialPort.parsers.ByteLength
+const Readline = SerialPort.parsers.Readline;
+var port = new SerialPort('/dev/ttyACM0', {
+	baudRate: 9600	
+});
+const parser = port.pipe(new Readline());
+
+
 
 io.on('connection', function(socket){
 	socket.on('accNum', function(info){
@@ -59,10 +70,9 @@ io.on('connection', function(socket){
 		query.exec(function(err, acc){
 	        console.log("accNum", acc);
 			var subquery = allTran.find({num: info.num});
-			subquery.limit(10);
 			subquery.exec(function(err,rep){
 				if (rep.length > 9){
-                	rep = rep.slice(res.length-9);
+                	rep = rep.slice(rep.length-9);
                 }
 				socket.emit('account', {account: acc, hist: rep});
 			});
@@ -75,18 +85,6 @@ io.on('connection', function(socket){
 		query.exec(function(err, acc){
 			console.log('account', acc);
 			socket.emit('accNameRep', {account: acc});
-		});
-	});
-	socket.on('accNFC', function(info){
-		var query = compteMdl.find({idCarte: info.carte});
-		var tmpAcc;
-		query.exec(function(err,acc){
-			tmpAcc = acc;
-		});
-		query = allTran.find({num: tmpAcc.num});
-		query.limit(10);
-		query.exec(function(err,acc){
-			socket.emit('account', {account: tmpAcc, hist: acc});
 		});
 	});
 	socket.on('operation', function(info){
@@ -137,6 +135,29 @@ io.on('connection', function(socket){
 			socket.emit('done', {msg: "compte et carte synchronisés"});
 		});
 	});
+
+	parser.on('data', function(data){
+		if(uid != data){
+			uid = data; 
+			console.log(uid); 
+		
+			compteMdl.find({idCarte: uid}, function(err, acc){
+				if (err) throw err;
+				if (acc.length == 0){
+						socket.emit('newNFC', {carte: uid});
+				}else{
+					var query = allTran.find({num: info.num});
+					query.exec(function(err,rep){
+						if (rep.length > 9){
+	                		rep = rep.slice(rep.length-9);
+                		}
+						socket.emit('account', {account: acc, hist: rep});
+					});
+				}
+			})
+		}
+	});
+
 	socket.on('accAll', function(info){
 		console.log('comptes', info);
 		if(info.num == 2){
