@@ -22,6 +22,7 @@ require.config({
 
 
 
+
 require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
 function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, AccountController, ListController/*, StocksController*/) {
     
@@ -81,7 +82,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     }
     
     if(readCookie('numAccCurr') != null){
-        socket.emit('accNum', {num: readCookie('numAccCurr')});
+        //socket.emit('accNum', {num: readCookie('numAccCurr')});
     }
     
     var templateButtons = Handlebars.compile(templButtons);
@@ -106,161 +107,234 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         {
           name : "Coca",
           tag : "coca",
-          price : 0.8
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Coca Zero",
+          tag : "cocaZ",
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Coca Cherry",
+          tag : "cocaC",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "Fanta",
-          price : "0,8"
+          tag : "fanta",
+          price : 0.8,
+		  priceS : 0.5
         },
-        {
-          name : "Oasis",
-          price : "0,8"
-        },
-        {
-          name : "Kinder Bueno",
-          tag : "kinderbueno",
-          price : 0.8
-        },
-        {
-          name : "7UP",
-          price : "0,8"
-        },
-        {
-          name : "Coca",
-          price : "0,8"
-        },
-        {
-          name : "Fanta",
-          price : "0,8"
-        },
-        {
-          name : "Oasis",
-          price : "0,8"
-        },
-        {
-          name : "Kinder Bueno",
-          price : "0,8"
-        },
-        {
-          name : "7UP",
-          price : "0,8"
-        },
-        {
-          name : "M&M's",
-          price : "0,8"
-        },
-        {
-          name : "Granola",
-          price : "0,8"
+		{
+          name : "Fanta Citron",
+          tag : "fantaC",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "Minute Maid",
-          price : "0,8"
-        },
-        {
-          name : "KitKat",
-          price : "0,8"
-        },
-        {
-          name : "Fanta",
-          price : "0,8"
+          tag : "minuteMP",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "Oasis",
-          price : "0,8"
+          tag : "oasis",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
-          name : "Kinder Bueno",
-          price : "0,8"
+          name : "Oasis PCF",
+          tag : "oasisPCF",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
           name : "7UP",
-          price : "0,8"
+          tag : "7up",
+          price : 0.8,
+		  priceS : 0.5
         },
         {
-          name : "M&M's",
-          price : "0,8"
+          name : "Ice Tea",
+          tag : "iceTea",
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Schweppes",
+          tag : "schwp",
+          price : 0.8,
+		  priceS : 0.5
+        },
+        {
+          name : "Cacolac",
+          tag : "cacolac",
+          price : 0.8,
+		  priceS : 0.5
+        },
+		{
+          name : "Eau",
+          tag : "eau",
+          price : 0.5,
+		  priceS : 0.3
         },
         {
           name : "Granola",
-          price : "0,8"
-        }
-        ,
+          tag : "granola",
+          price : 0.8,
+		  priceS : 0.6
+        },
         {
-          name : "Minute Maid",
-          price : "0,8"
+          name : "Bueno",
+          tag : "bueno",
+          price : 0.8,
+		  priceS : 0.6
+        },
+        {
+          name : "Bueno White",
+          tag : "buenoW",
+          price : 0.8,
+		  priceS : 0.6	
         },
         {
           name : "KitKat",
-          price : "0,8"
+          tag : "kitkat",
+          price : 0.6,
+		  priceS : 0.3
+        },
+        {
+          name : "Skittles",
+          tag : "skittles",
+          price : 0.7,
+		  priceS : 0.5
         },
         {
           name : "M&M's",
-          price : "0,8"
+          tag : "mms",
+          price : 0.6,
+		  priceS : 0.3	
         },
         {
-          name : "Granola",
-          price : "0,8"
+          name : "Twix",
+          tag : "twix",
+          price : 0.6,
+		  priceS : 0.3
         },
         {
-          name : "Minute Maid",
-          price : "0,8"
+          name : "Snickers",
+          tag : "snickers",
+          price : 0.6,
+		  priceS : 0.3
         },
         {
-          name : "KitKat",
-          price : "0,8"
+          name : "Chips BBQ",
+          tag : "chipsB",
+          price : 0.7,
+		  priceS : 0.5
+        },
+        {
+          name : "Chips Poulet",
+          tag : "chipsP",
+          price : 0.7,
+		  priceS : 0.5
+        },
+        {
+          name : "Chips",
+          tag : "chips",
+          price : 0.7,
+		  priceS : 0.5
         },
         {
           name : "Sandwich",
           tag : "sandwich",
-          price : 2
+          price : 2,
+		  priceS : 1.5
         },
         {
           name : "Panini",
           tag : "panini",
-          price : 2
+          price : 2,
+		  priceS : 1.5
         },
         {
           name : "Croque",
           tag : "croque",
-          price : 1
+          price : 1,
+		  priceS : 0.5
         },
-        {
+		{
           name : "Hot Dog",
-          tag : "hot dog",
-          price : 1
+          tag : "hotdog",
+          price : 1,
+		  priceS : 0.5
+        },
+		{
+          name : "Croque Raclette",
+          tag : "croqueRa",
+          price : 1,
+		  priceS : 0.5
+        },
+		{
+          name : "Croque Rosette",
+          tag : "croqueRo",
+          price : 1,
+		  priceS : 0.5
         },
         {
           name : "Pasta Box",
           tag : "pasta",
-          price : 2
+          price : 2,
+		  priceS : 1.5
+        },
+		{
+          name : "Ramen",
+          tag : "ramen",
+          price : 2,
+		  priceS : 1.5
         }
     ];
     
     var buttons = {
         formules : [
             {
-                name : "Formule Sandwich",
+                name : "Menu Sandwich",
                 tag : "formSand",
-                price : 1
+                price : 3,
+		  		priceS : 2
             },
             {
-                name : "Formule Panini",
+                name : "Menu Panini",
                 tag : "formPan",
-                price : 2
+                price : 3,
+		  		priceS : 2
             },
             {
-                name : "Formule Croques",
+                name : "Menu Croques",
                 tag : "formCroq",
-                price : 3
+                price : 3,
+		  		priceS : 2
+            },
+			{
+                name : "Menu Croques Raclette",
+                tag : "formCroqRa",
+                price : 3,
+		  		priceS : 2.3
             },
             {
-                name : "Formule Hot Dogs",
-                price : 4
+                name : "Menu Hot Dogs",
+				tag : "formHD",
+                price : 3,
+		  		priceS : 2
             },
             {
-                name : "Formule Pasta-Box",
-                price : 5
+                name : "Menu Pasta Box",
+				tag : "formPB",
+                price : 3,
+		  		priceS : 2
             }
             
         ],
@@ -310,6 +384,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
         if($("#serveur").is('checked')){
             temp.price = buttons.find(isInArray).priceS;
+			console.log(temp.price);
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -444,6 +519,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
     });
     
+
     socket.on('account',function(socket){
         delete currentAccount;
         currentAccount = {

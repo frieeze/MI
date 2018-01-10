@@ -1,4 +1,5 @@
-Nom :   {{name}}<br/>
-Promo : {{promo}}<br/>
-N° Compte : {{numberAccount}}<br/>
-Solde : {{solde}} € 
+<h3>Informations du Compte</h3>
+N°{{numberAccount}}<br/>
+{{name}}<br/>
+{{promo}}<br/>
+{{solde}} € 

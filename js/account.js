@@ -1,5 +1,5 @@
-define(["handlebars","jquery","text!templates/histo.tpl","text!templates/research.tpl","text!templates/account.tpl","socketio"],
-function(Handlebars,$,templHisto, templResearch, templAccount, io) {
+define(["handlebars","jquery","text!templates/histo.tpl","text!templates/research.tpl","text!templates/account.tpl"/*,"socketio"*/],
+function(Handlebars,$,templHisto, templResearch, templAccount/*, io*/) {
     
     var AccountController = function(){
         var templateHisto = Handlebars.compile(templHisto);
@@ -9,6 +9,7 @@ function(Handlebars,$,templHisto, templResearch, templAccount, io) {
         
         $("#research").html(templateResearch);
         $("#histo").html(templateHisto);
+		$("#info").html(templateAccount);
         
         function readCookie(name) {
             var nameEQ = name + "=";
@@ -24,8 +25,8 @@ function(Handlebars,$,templHisto, templResearch, templAccount, io) {
         if(readCookie('admin') == 'false'){
             $("#suppr").hide();
         }
-        var socket = io.connect('http://localhost:80');
-        socket.emit('accNum', {num : readCookie('numAccCurr')});
+        //var socket = io.connect('http://localhost:80');
+        //socket.emit('accNum', {num : readCookie('numAccCurr')});
 
         $("#ajoutRetrait").keypress(function(event){
             if(event.keyCode == 13){
