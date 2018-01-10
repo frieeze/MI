@@ -31,7 +31,7 @@ var allTran = mongoose.model('allTran', hisTran);
 
 allTran.remove({}, function(err,c){console.log("erased");});
 compteMdl.remove({}, function(err,c){console.log("erase");});
-var comCount;
+var comCount=0;
 compteMdl.count({}, function(err,c){
 	comCount = c;
 });
@@ -53,7 +53,9 @@ io.on('connection', function(socket){
 		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
+			console.log(acc);
 		});
+		console.log(tmpAcc);
 		query = allTran.find({num: number.num});
 		query.limit(10);
 		query.exec(function(err,acc){
