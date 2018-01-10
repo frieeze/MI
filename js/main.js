@@ -444,8 +444,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     socket.on('account',function(socket){
         console.log('reception');
-        console.log(socket);
-    })
     
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){

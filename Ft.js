@@ -50,15 +50,29 @@ io.on('connection', function(socket){
 	socket.on('accNum', function(number){
 		console.log("accNum reçu");
 		var query = compteMdl.find({num: number.num});
+		let tmpAcc;
 		query.exec(function(err, acc){
-			socket.emit('account', {account: acc});
+			tmpAcc = acc;
 		});
 		query = allTran.find({num: number.num});
 		query.limit(10);
 		query.exec(function(err,acc){
-			socket.emit('accHist', {account: acc});
+			socket.emit('account', {account: tmpAcc, hist: acc});
 		});
 	});
+	sockets.on('accName', function(socket){
+		var query = compteMdl.find({nom: socket});
+		var tmpnum;
+		query.exec(function(err, acc){
+			socket.emit('account', acc);
+			tmpnum = acc.num;
+		});
+		query = allTran.find({num: tmpnum});
+		query.limit(10);
+		query.exec(function(err,acc){
+			socket.emit('accHist', acc);
+		})
+	})
 });
 
 /*io.sockets.on('accName', function(socket){
@@ -75,37 +89,9 @@ io.on('connection', function(socket){
 	})
 })*/
 
-
+app.get('/', function(req,res){
+	res.sendFile(__dirname + '/index.html');
+});
 app.get('*',function(req, res){
 	res.sendFile(__dirname + req.url);
 });
-/*app.get('/libs/*',function(req, res){
-	res.sendFile(__dirname + req.url);
-});
-app.get('/assets/*',function(req, res){
-	res.sendFile(__dirname + req.url);
-});
-app.get('/templates/*',function(req, res){
-	res.sendFile(__dirname + req.url);
-});
-app.get('/css/*',function(req, res){
-	res.sendFile(__dirname + req.url);
-});
-app.get('/js/*',function(req, res){
-	res.sendFile(__dirname + req.url);
-});
-app.get('*.html',function(req, res){
-	res.sendFile(__dirname + req.url);
-});
-server.get('index.html',function(req, res){
-	res.sendFile(__dirname + '/index.html');
-});
-server.get('account.html',function(req, res){
-	res.sendFile(__dirname + '/account.html');
-});
-server.get('list.html',function(req, res){
-	res.sendFile(__dirname + '/list.html');
-});
-server.get('stock.html',function(req, res){
-	res.sendFile(__dirname + '/stock.html');
-});*/
