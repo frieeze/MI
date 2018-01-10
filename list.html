@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<title>MAISON ISEN</title>
 		<link rel="stylesheet" href="css/main.css" />
+		<link rel="icon" type="image/png" sizes="36x36" href="assets/android-icon-36x36.png"/>
 	</head>
 	<body>
         <header>
@@ -17,9 +18,8 @@
                     <label for="nom">Nom : </label><input type="text" id="nom"/> <br/>
                     <label for="prenom">Prénom : </label><input type="text" id="prenom"/> <br/>
                     <label for="promo">Promo :</label> <input type="text" id="promo"/> <br/>
-                    <label for="compte">N° Compte :</label> <input type="text" id="compte"/> <br/>
                     <label for="solde">Solde :</label> <input type="text" id="solde"/> <br/>
-                    <input type="submit" id="sub" value="Créer"/> <br/>
+                    <button id="sub" >Créer</button> <br/>
                 </form>
             </div>
             <div id="list" class="table">
@@ -28,7 +28,7 @@
         <footer>
             <p>&copy; Maison ISEN - Chez MaMi - 2018</p>   
         </footer>
-    <script src="libs/require.js" data-main="js/main.js?"></script>
-	<script src="libs/require.js" data-main="js/list.js?"></script>
+    <script src="libs/require.js" data-main="js/main.js"></script>
+	<script src="libs/require.js" data-main="js/list.js"></script>
   </body>
 </html>

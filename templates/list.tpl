@@ -10,7 +10,7 @@
 		<th>Solde</th>
 	</tr>
 	{{#each this}}
-	<tr>
+	<tr class="line" id="{{numberAccount}}">
 		<td>{{numberAccount}}</td>
 		<td>{{name}}</td>
 		<td>{{promo}}</td>

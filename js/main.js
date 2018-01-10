@@ -22,10 +22,11 @@ require.config({
 
 
 
-require([/*"socketio",*/"handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
+
+require([/*"socketio",*/"handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, AccountController, ListController/*, StocksController*/) {
     
-    //var socket = io.connect('http://localhost:8080'); 
+    //var socket = io.connect('http://localhost:80'); 
     var password = "MaisonISEN";
     
     Handlebars.registerHelper('ifColor', function(a, options){
@@ -80,18 +81,20 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         }
     }
     
-    
-    
-    if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
-        var templateButtons = Handlebars.compile(templButtons);
-        var templateCount = Handlebars.compile(templCount);
-        var templateHisto = Handlebars.compile(templHisto);
-        var templateRecap = Handlebars.compile(templRecap);
-        var templateResearch = Handlebars.compile(templResearch);
+    if(readCookie('numAccCurr') != null){
+        //socket.emit('accNum', {num: readCookie('numAccCurr')});
     }
+    
+    var templateButtons = Handlebars.compile(templButtons);
+    var templateCount = Handlebars.compile(templCount);
+    var templateAccount = Handlebars.compile(templAccount);
+    var templateHisto = Handlebars.compile(templHisto);
+    var templateRecap = Handlebars.compile(templRecap);
+    var templateResearch = Handlebars.compile(templResearch);
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
         var accountView = new AccountController();
+        console.log("test");
     }
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "list.html"){
@@ -265,7 +268,7 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         },
 		{
           name : "Hot Dog",
-          tag : "hot dog",
+          tag : "hotdog",
           price : 1,
 		  priceS : 0.5
         },
@@ -379,7 +382,7 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("input[name=serveur]").is('checked')){
+        if($("#serveur").is('checked')){
             temp.price = buttons.find(isInArray).priceS;
 			console.log(temp.price);
         }
@@ -404,7 +407,7 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("input[name=serveur]").is('checked')){
+        if($("#serveur").is('checked')){
             temp.price = products.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
@@ -516,15 +519,44 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         }
     });
     
+
     /*socket.on('account',function(socket){
+=======
+    socket.on('account',function(socket){
+        delete currentAccount;
+        currentAccount = {
+            name : socket.account[0].prenom + " " + socket.account[0].nom,
+            promo : socket.account[0].promo,
+            solde : socket.account[0].solde, 
+            numberAccount : socket.account[0].num,
+            histo : new Array()
+        };
+        if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){
+           $("#account").html(templateCount(currentAccount));
+        }
+        else if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
+            console.log("test");
+            $("#info").html(templateAccount(currentAccount));
+        }
+        $("#closeAccount").on('click', delog);
+        $("#linkAccount").on('click', function(){
+            document.location.href="./account.html";
+        });
+        $("#histo").html(templateHisto());
+        createCookie('numAccCurr', currentAccount.numberAccount, 0);
+    })
+    
+    socket.on('accHist',function(socket){
+>>>>>>> 4402fb87af8bff7be847d91fe75dcb2f160912f4
         console.log('reception');
         console.log(socket);
+        
+        $("#histo").html(templateHisto());
     })
     
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
-            console.log('emit numero :'+$('input[name=numberSearch]').val());
-            socket.emit('accNum', {num: $('input[name=numberSearch]').val()})
+            socket.emit('accNum', {num: $('input[name=numberSearch]').val()});
             $("#numberSearch").val('');
         }
     });*/
@@ -544,11 +576,14 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
         createCookie('admin','false',0);
     });
     
-    $("#closeAccount").on('click', function(){
+    
+    var delog = function(){
         currentAccount = undefined;
+        createCookie('numAccCurr', null, 0);
         //mettre cookie a null
         $("#histo").html(templateHisto());
         $("#account").empty();
-    });
+    }
+    $("#closeAccount").on('click', delog);
     
 });
