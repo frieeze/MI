@@ -339,6 +339,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     };
     var price = 0;
     
+
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
         $("#research").html(templateResearch);
         $("#buttons").html(templateButtons(buttons));
