@@ -9,7 +9,6 @@ mongoose.connection.once('connected', function(){
 server.listen(80);
 
 
-var comCount = 0;
 var tplCompte = new mongoose.Schema({
 	prenom: String,
 	nom: String, 
@@ -60,34 +59,51 @@ io.on('connection', function(socket){
 			socket.emit('account', {account: tmpAcc, hist: acc});
 		});
 	});
-	sockets.on('accName', function(socket){
-		var query = compteMdl.find({nom: socket});
-		var tmpnum;
+	socket.on('accName', function(name){
+		var query = compteMdl.find({nom: name.tpl});
+		let tmpAcc;
 		query.exec(function(err, acc){
-			socket.emit('account', acc);
-			tmpnum = acc.num;
+			tmpAcc = acc;
 		});
-		query = allTran.find({num: tmpnum});
+		query = allTran.find({num: tmpAcc.num});
 		query.limit(10);
 		query.exec(function(err,acc){
-			socket.emit('accHist', acc);
-		})
+			socket.emit('account', {account: tmpAcc, hist: acc});
+		});
+	});
+	socket.on('accNFC', function(serial){
+		var query = compteMdl.find({idCarte: serial.carte});
+		let tmpAcc;
+		query.exec(function(err,acc){
+			tmpAcc = acc;
+		});
+		query = allTran.find({num: tmpAcc.num});
+		query.limit(10);
+		query.exec(function(err,acc){
+			socket.emit('account', {account: tmpAcc, hist: acc});
+		});
+	});
+	socket.on('operation', function(data){
+		var query = compteMdl.find({num: number.num});
+		let tmpAcc;
+		query.exec(function(err, acc){
+			tmpAcc = acc;
+		});
+		var trans = new allTran({num: data.num, soldeAv: tmpAcc.solde, soldeAp: tmpAcc.solde-data.prix, prix: data.prix});
+		trans.save();
+		tmpAcc.solde += data.prix;
+		tmpAcc.save();
+	});
+	socket.on('accCreate', function(info){
+		let comCount;
+		compteMdl.count({}, function(err,c){
+			comCount = c;
+		});
+		var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, idCarte: info.carte, num: comCount+1});
+		newAcc.sace();
+		socket.emit('accCreateRep', {num: newAcc.num});
 	})
 });
-
-/*io.sockets.on('accName', function(socket){
-	var query = compteMdl.find({nom: socket});
-	var tmpnum;
-	query.exec(function(err, acc){
-		socket.emit('account', acc);
-		tmpnum = acc.num;
-	});
-	query = allTran.find({num: tmpnum});
-	query.limit(10);
-	query.exec(function(err,acc){
-		socket.emit('accHist', acc);
-	})
-})*/
 
 app.get('/', function(req,res){
 	res.sendFile(__dirname + '/index.html');
