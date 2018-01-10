@@ -20,10 +20,11 @@ var tplCompte = new mongoose.Schema({
 
 var hisTran = new mongoose.Schema({
 	num: Number,
-	date: {type: Date, default:Date.now},
+	date: String,
 	soldeAv: Number,
 	soldeAp: Number,
-	prix: Number
+	prix: Number,
+	negatif: Boolean
 });
 
 var compteMdl = mongoose.model('compteMdl', tplCompte);
@@ -92,9 +93,12 @@ io.on('connection', function(socket){
 		query.exec(function(err, acc){
 			tmpAcc = acc;
 		});
-		var trans = new allTran({num: info.num, soldeAv: tmpAcc.solde, soldeAp: tmpAcc.solde+info.prix, prix: info.prix});
+		var trans = new allTran({num: info.num, soldeAv: tmpAcc.solde, soldeAp: tmpAcc.solde+info.prix, prix: info.prix, date: info.date});
 		trans.save();
 		tmpAcc.solde += info.prix;
+		if(tmpAcc.solde <0){
+			tmpAcc.negatif = 1;
+		}else{tmpAcc.negatif = 0;}
 		tmpAcc.save();
 	});
 	socket.on('accCreate', function(info){
@@ -102,7 +106,7 @@ io.on('connection', function(socket){
 		compteMdl.count({}, function(err,c){
 			comCount = c;
 		});
-		var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, idCarte: info.carte, num: comCount+1});
+		var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, num: comCount+1});
 		newAcc.save();
 		socket.emit('accCreateRep', {num: newAcc.num});
 	});
@@ -115,7 +119,25 @@ io.on('connection', function(socket){
 			if(err) throw err;
 			socket.emit('done', {msg: "compte et carte synchronisés"});
 		});
-	})
+	});
+	socket.on('accAll', function(info){
+		if(info.num == 2){
+			var query = compteMdl.find({});
+			var tmpAcc;
+			query.exec(function(err, acc){
+				tmpAcc = acc;
+			});
+			socket.emit('allAccount', {account: tmpAcc});
+		}
+		else {
+			var query = compteMdl.find({negatif: info.num});
+			var tmpAcc;
+			query.exec(function(err, acc){
+				tmpAcc = acc;
+			});
+			socket.emit('allAccount', {account: tmpAcc});
+		}
+	});
 
 });
 
