@@ -63,6 +63,7 @@ io.on('connection', function(socket){
 		});
 	});
 	socket.on('accName', function(info){
+		console.log("name");
 		var query = compteMdl.find({nom: info.name});
 		var tmpAcc;
 		query.exec(function(err, acc){
@@ -87,6 +88,7 @@ io.on('connection', function(socket){
 		});
 	});
 	socket.on('operation', function(info){
+		console.log("operation");
 		var query = compteMdl.find({num: number.num});
 		var tmpAcc;
 		query.exec(function(err, acc){
@@ -101,6 +103,7 @@ io.on('connection', function(socket){
 		tmpAcc.save();
 	});
 	socket.on('accCreate', function(info){
+		console.log("create");
 		var comCount;
 		compteMdl.count({}, function(err,c){
 			comCount = c;
@@ -111,6 +114,7 @@ io.on('connection', function(socket){
 		console.log(newAcc);
 	});
 	socket.on('accDelete', function(info){
+		console.log("delete");
 		compteMdl.remove({num: info.num});
 		allTran.remove({num: info.num});
 	});
