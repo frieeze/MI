@@ -347,6 +347,9 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#histo").html(templateHisto(currentAccount.histo));
             $("#account").html(templateCount(currentAccount));
         }
+        else{
+            $("#histo").html(templateHisto);
+        }
     }
     
     $("#serveur").on('click', function(){
@@ -382,6 +385,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
            line.push(temp);
         }
         price = parseFloat(price) + parseFloat(temp.price);
+        Math.round(price*100)/100;
         $("#total").empty();
         $("#total").html(price);
         $("#recap").html(templateRecap(line));
@@ -393,11 +397,13 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             price : $("#"+$(this).attr('id')+"Price").text(),
             quantity : 1
         };
+        Math.round(temp.price*100)/100;
         function isInArray(a){
             return temp.name === a.name;
         }
         if(serveur){
             temp.price = buttons.soloProd.find(isInArray).priceS;
+            Math.round(temp.price*100)/100;
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -406,6 +412,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
            line.push(temp);
         }
         price = parseFloat(price) + parseFloat(temp.price);
+        Math.round(price*100)/100;
         $("#total").empty();
         $("#total").html(price);
         $("#recap").html(templateRecap(line));
@@ -493,7 +500,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#serv").html("Non");
         }
         socket.emit('operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
-        socket.emit('accNum', {num: currentAccount.numberAccount});
+        //socket.emit('accNum', {num: currentAccount.numberAccount});
     });
     
     $("#linkAccount").on('click', function(){
@@ -603,8 +610,9 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
                 let date = new Date();
                 let temp = {
                     date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
-                    price : $('#ajoutRetrait').val()
+                    price : parseFloat($('#ajoutRetrait').val())
                 }
+                console.log(temp.price);
                 socket.emit('operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
                 $("#ajoutRetrait").val('');
                 socket.emit('accNum', {num : currentAccount.numberAccount});

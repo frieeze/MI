@@ -56,6 +56,7 @@ io.on('connection', function(socket){
 		query.exec(function(err, acc){
 			tmpAcc = acc;
 		});
+        console.log("accNum", tmpAcc);
 		query = allTran.find({num: info.num});
 		query.limit(10);
 		query.exec(function(err,acc){
@@ -90,18 +91,26 @@ io.on('connection', function(socket){
 	socket.on('operation', function(info){
 		console.log("operation");
 		var query = compteMdl.find({num: info.num});
-		var tmpAcc;
 		query.exec(function(err, acc){
-			tmpAcc = acc;
-		});
-		var trans = new allTran({num: info.num, soldeAv: tmpAcc.solde, soldeAp: tmpAcc.solde+info.prix, prix: info.prix, date: info.date});
-		trans.save();
-		tmpAcc.solde += info.prix;
-		if(tmpAcc.solde <0){
-			tmpAcc.negatif = 1;
-		}else{tmpAcc.negatif = 0;}
-		tmpAcc.save();
+            var trans = new allTran({num: info.num, soldeAv: acc[0].solde, soldeAp: acc[0].solde+info.prix, prix: info.prix, date: info.date});
+            trans.save();
+            acc[0].solde += info.prix;
+            if(acc[0].solde <0){
+                acc[0].negatif = 1;
+            }else{acc[0].negatif = 0;}
+            acc[0].save();
+            console.log("acc[0]", acc[0]);
+            var subquery = allTran.find({num: info.num});
+            subquery.limit(10);
+            subquery.exec(function(err,res){
+                console.log('res', res);
+                res.push(trans);
+                socket.emit('account', {account: acc, hist: res});
+            });
+            
+		});		
 	});
+        
 	socket.on('accCreate', function(info){
 		console.log("create");
 		var comCount;
