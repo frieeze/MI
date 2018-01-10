@@ -22,8 +22,8 @@ require.config({
 
 
 
-require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
+require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, AccountController, ListController/*, StocksController*/) {
     
     var socket = io.connect('http://localhost:80'); 
     var password = "MaisonISEN";
@@ -84,13 +84,12 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         socket.emit('accNum', {num: readCookie('numAccCurr')});
     }
     
-    if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
-        var templateButtons = Handlebars.compile(templButtons);
-        var templateCount = Handlebars.compile(templCount);
-        var templateHisto = Handlebars.compile(templHisto);
-        var templateRecap = Handlebars.compile(templRecap);
-        var templateResearch = Handlebars.compile(templResearch);
-    }
+    var templateButtons = Handlebars.compile(templButtons);
+    var templateCount = Handlebars.compile(templCount);
+    var templateAccount = Handlebars.compile(templAccount);
+    var templateHisto = Handlebars.compile(templHisto);
+    var templateRecap = Handlebars.compile(templRecap);
+    var templateResearch = Handlebars.compile(templResearch);
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
         var accountView = new AccountController();
@@ -451,9 +450,16 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             name : socket.account[0].prenom + " " + socket.account[0].nom,
             promo : socket.account[0].promo,
             solde : socket.account[0].solde, 
-            numberAccount : socket.account[0].num
+            numberAccount : socket.account[0].num,
+            histo : new Array()
         };
-        $("#account").html(templateCount(currentAccount));
+        if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){
+           $("#account").html(templateCount(currentAccount));
+        }
+        else if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
+            console.log("test");
+            $("#info").html(templateAccount(currentAccount));
+        }
         $("#closeAccount").on('click', delog);
         $("#linkAccount").on('click', function(){
             document.location.href="./account.html";
