@@ -22,8 +22,8 @@ require.config({
 
 
 
-require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, AccountController, ListController/*, StocksController*/) {
+require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","text!templates/list.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, templList, AccountController, ListController/*, StocksController*/) {
     
     var socket = io.connect('http://localhost:80'); 
     var password = "MaisonISEN";
@@ -87,7 +87,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         admin = false;
     }
     else if(readCookie('admin') == 'true'){
-        console.log(readCookie('admin'));
         admin = true;
         $("#logged").empty();
         $("#logged").html("Administrateur");
@@ -109,12 +108,14 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     var templateHisto = Handlebars.compile(templHisto);
     var templateRecap = Handlebars.compile(templRecap);
     var templateResearch = Handlebars.compile(templResearch);
+    var templateList = Handlebars.compile(templList);
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
         var accountView = new AccountController();
     }
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "list.html"){
         var listView = new ListController();
+        socket.emit('accAll', {num : 2});
     }
     
     var line = new Array();
@@ -534,7 +535,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     socket.on('account',function(socket){
-        console.log(socket);
         delete currentAccount;
         currentAccount = {
             name : socket.account[0].prenom + " " + socket.account[0].nom,
@@ -617,15 +617,17 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     
-    socket.on('accCreate', function(socket){
+    socket.on('accCreateRep', function(socket){
+        console.log("test");
         let date = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
-        socket.emit('operation', {num : socket. num,prix : $('input #solde').val(),date : date});
+        socket.emit('operation', {num : socket. num,prix : 12,date : date}); //valeur
         createCookie('numAccCurr', currentAccount.numberAccount,0);
         document.location.href="./account.html";
     });
     
     socket.on('allAccount', function(socket){
         $("#list").empty();
+        console.log(socket);
         $("#list").html(templateList(socket.account));
         $(".line").on('click', function(){
             createCookie('numAccCurr', this.attr('id'),0);
