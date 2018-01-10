@@ -79,11 +79,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#suppr").show();
         }
     }
-    if(document.cookie.indexOf('accNum') != -1){
+    
+    console.log(document.cookie.indexOf('numAccCurr'));
+    if(document.cookie.indexOf('numAccCurr') != -1){
         socket.emit('accNum', {num: readCookie('numAccCurr')});
-    }
-    else{
-        console.log("test");
+        console.log('found');
     }
 
     var templateButtons = Handlebars.compile(templButtons);
@@ -600,8 +600,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     var closeAcc = function(){
         currentAccount = undefined;
-        createCookie('numAccCurr', null, 0);
-        //mettre cookie a null
+        eraseCookie('numAccCurr');
         $("#histo").html(templateHisto());
         $("#account").empty();
     }
@@ -644,7 +643,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     $("#suppr").on('click', function(){
         socket.emit('accDelete', {num: currentAccount.numberAccount});
-        createCookie('numAccCurr', 'null',0);
+        eraseCookie('numAccCurr');
         document.location.href="./index.html";
     });
         
@@ -654,16 +653,15 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     
-    socket.on('accCreateRep', function(sockets){
+
+    socket.on('accCreateRep', function(data){
         console.log("créé");
         var date = new Date();
         var date2 = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
         var price = $('#soldeCreate').val();
-        console.log(date2);
-        console.log(price);
-        console.log(sockets);
-        socket.emit('operation', {num : sockets.num, prix : price, date : date2}); //valeur
-        createCookie('numAccCurr', sockets.num,0);
+        console.log(data.num);
+        socket.emit('operation', {num : data.num, prix : price, date : date2}); //valeur
+        createCookie('numAccCurr', data.num , 0);
         document.location.href="./account.html";
     });
     
@@ -673,7 +671,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#list").html(templateList(socket.account));
         bindListButton();
         $(".line").on('click', function(){
-            createCookie('numAccCurr', this.attr('id'),0);
+            createCookie('numAccCurr', $(this).attr('id'),0);
             document.location.href="./account.html";
         });
     });
