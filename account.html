@@ -7,26 +7,27 @@
 	</head>
 	<body>
         <header>
-            <a id="Accueil" href="./index.html">Maison ISEN</a> <span id="logged">Accès Vendeur</span> - Mot de passe :  <input type="text" name="password" text="password"/>
+            <a id="Accueil" href="./index.html">Maison ISEN</a> <span id="logged">Accès Vendeur</span> - Mot de passe :  <input type="password" name="password" text="password"/>
             <a href="./list.html">Comptes</a>  <a href="./stocks.html">Stocks</a> <a href="./list.html">Créer Compte</a>
         </header>
         <div id="page">
             <div id="research">
             </div>
             <div id="content">
-                <div id="info">
+                <div class="table" id="info">
                     Nom :  - Prenom : <br/>
                     Promo : <br/>
-                    N° Compte <br/>
+                    N° Compte : <br/>
                 </div>
-                <div id="histo">
+                <div class="table" id="histo">
                 </div>
-                Solde :   € - <input type="text" name="entry"/>
             </div>
+            <br/>Solde :   € - <input type="text" name="entry"/>
         </div>
         <footer>
             <p>&copy; Maison ISEN - Chez MaMi - 2018</p> 
         </footer>
-	<script src="libs/require.js" data-main="account.js?"></script>
+    <script src="libs/require.js" data-main="js/main.js?"></script>
+	<script src="libs/require.js" data-main="js/account.js?"></script>
   </body>
 </html>

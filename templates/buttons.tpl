@@ -1,7 +1,7 @@
 {{#each formules}}
-    <div class="formule">{{name}}<br/>{{price}}</div>
+    <div class="formule" id="{{name}}">{{name}}<br/><span id="{{name}}Price">{{price}}</span></div>
 {{/each}}
 <br/>
 {{#each soloProd}}
-    <div class="prod">{{name}}<br/>{{price}}</div>
+    <div class="prod" id="{{name}}">{{name}}<br/><span id="{{name}}Price">{{price}}</span></div>
 {{/each}}
