@@ -306,7 +306,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("input[name=serveur]").is('checked')){
+        if($("#serveur").is('checked')){
             temp.price = buttons.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
@@ -330,7 +330,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("input[name=serveur]").is('checked')){
+        if($("#serveur").is('checked')){
             temp.price = products.find(isInArray).priceS;
         }
         if(line.find(isInArray)){

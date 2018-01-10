@@ -8,7 +8,7 @@ function(Handlebars,$,templHisto, templResearch) {
         $("#research").html(templateResearch);
         $("#histo").html(templateHisto/*(currentAccount.histo)*/);
 
-        if(admin == false){
+        if(readCookie('admin') == 'false'){
             $("#suppr").hide();
         }
 
