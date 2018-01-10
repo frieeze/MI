@@ -10,7 +10,7 @@
 	<tr>
     	<td>{{date}}</td>
 		<td>{{soldeAv}} €</td>
-		<td>{{price}} €</td>
+		<td>{{prix}} €</td>
 		<td>{{soldeAp}} €</td>
 	</tr>
 {{/each}}

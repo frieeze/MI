@@ -388,7 +388,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             return temp.name === a.name;
         }
         if(serveur){
-            temp.price = buttons.find(isInArray).priceS;
+            temp.price = buttons.formules.find(isInArray).priceS
             console.log("test");
         }
         if(line.find(isInArray)){
@@ -413,7 +413,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             return temp.name === a.name;
         }
         if(serveur){
-            temp.price = products.find(isInArray).priceS;
+            temp.price = buttons.soloProd.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -508,7 +508,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#serv").empty();
             $("#serv").html("Non");
         }
-        socket.emit('Operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
+        socket.emit('operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
         socket.emit('accNum', {num: currentAccount.numberAccount});
     });
     
@@ -535,6 +535,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     socket.on('account',function(socket){
+        console.log(socket);
         delete currentAccount;
         currentAccount = {
             name : socket.account[0].prenom + " " + socket.account[0].nom,
@@ -594,7 +595,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
                     date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
                     price : $('#ajoutRetrait').val()
                 }
-                socket.emit('Operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
+                socket.emit('operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
                 $("#ajoutRetrait").val('');
                 socket.emit('accNum', {num : currentAccount.numberAccount});
             }
@@ -604,6 +605,21 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             }
         }
     });
+    
+    var bindListButton = function(){
+      $("#all").on('click', function(){  
+            console.log("2");
+            socket.emit('accAll', {num : 2});
+        });
+        $("#pos").on('click', function(){
+            console.log("0");
+            socket.emit('accAll', {num : 0});
+        });
+        $("#neg").on('click', function(){
+            console.log("1");
+            socket.emit('accAll', {num : 1});
+        });  
+    };
     
     $("#suppr").on('click', function(){
         socket.emit('accDelete', {num:currentAccount.numberAccount});
@@ -619,8 +635,10 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     socket.on('accCreateRep', function(socket){
         console.log("test");
-        let date = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
-        socket.emit('operation', {num : socket. num,prix : $('#soldeCreate').val(),date : date}); //valeur
+        var date = new Date();
+        var date2 = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
+        var price = $('#soldeCreate').val();
+        socket.emit('operation', {num : socket.num, prix : price, date : date}); //valeur
         createCookie('numAccCurr', currentAccount.numberAccount,0);
         document.location.href="./account.html";
     });
@@ -629,22 +647,15 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#list").empty();
         console.log(socket);
         $("#list").html(templateList(socket.account));
+        bindListButton();
         $(".line").on('click', function(){
             createCookie('numAccCurr', this.attr('id'),0);
             document.location.href="./account.html";
         });
     });
         
-    $("#all").on('click', function(){  
-        socket.emit('accAll', {num : 2});
-    });
-    $("#pos").on('click', function(){
-        socket.emit('accAll', {num : 0});
-    });
-    $("#neg").on('click', function(){
-        socket.emit('accAll', {num : 1});
-    });
     $("#create").on('click', function(){
+        console.log("test");
         socket.emit('accCreate', {nom : $('#nomCreate').val(),prenom : $('#prenomCreate').val(),promo : $('#promoCreate').val()});
     });
         
