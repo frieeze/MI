@@ -23,10 +23,10 @@ require.config({
 
 
 
-require([/*"socketio",*/"handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, AccountController, ListController/*, StocksController*/) {
+require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, AccountController, ListController/*, StocksController*/) {
     
-    //var socket = io.connect('http://localhost:80'); 
+    var socket = io.connect('http://localhost:80'); 
     var password = "MaisonISEN";
     
     Handlebars.registerHelper('ifColor', function(a, options){
@@ -520,8 +520,6 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
     });
     
 
-    /*socket.on('account',function(socket){
-=======
     socket.on('account',function(socket){
         delete currentAccount;
         currentAccount = {
@@ -547,7 +545,6 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
     })
     
     socket.on('accHist',function(socket){
->>>>>>> 4402fb87af8bff7be847d91fe75dcb2f160912f4
         console.log('reception');
         console.log(socket);
         
@@ -559,7 +556,7 @@ function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, t
             socket.emit('accNum', {num: $('input[name=numberSearch]').val()});
             $("#numberSearch").val('');
         }
-    });*/
+    });
     
     
     
