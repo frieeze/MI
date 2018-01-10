@@ -27,38 +27,6 @@ function(Handlebars,$,templHisto, templResearch, templAccount, io) {
         var socket = io.connect('http://localhost:80');
         socket.emit('accNum', {num : readCookie('numAccCurr')});
         
-        //fonction de reception apres ajoutRetrait
-
-        $("#ajoutRetrait").keypress(function(event){
-            if(event.keyCode == 13){
-                if(currentAccount.solde - $('input[name=entry]').val() > -4){
-                    let date = new Date();
-                    let temp = {
-                        date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
-                        price : $('input[name=entry]').val()
-                    }
-                    //emit requete avec arg price et date, et refresh de toutes les vues 
-                    $("#entry").val('');
-                }
-                else{
-                    window.alert("Impossible, ce compte passera sous les -4€ de négatif !");
-                    $("#entry").val('');
-                }
-            }
-        }); //mettre emit pour changer le solde BDD
-        
-        
-        //fonction suppression
-        $("#suppr").on('click', function(){
-            //emit suppression
-            //vider cookie
-            //redirection
-        });
-        
-        //fonction ajout NFC
-        $("#addNFC").on('click', function(){
-            //juste emit NFC
-        });
     };
     
     return AccountController;

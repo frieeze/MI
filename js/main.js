@@ -28,6 +28,29 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     var socket = io.connect('http://localhost:80'); 
     var password = "MaisonISEN";
     
+    var serveur = false;
+    
+    var currentAccount = {
+        name : "Jean-Michel Truc",
+        promo : 61,
+        solde : 100,
+        histo : [
+            {
+               date : "01/01/18 10:01",
+               soldeBefore : 100,
+               price : 15,
+               soldeAfter: 85
+            },
+            {
+                date : "03/01/18 20:02",
+               soldeBefore : 20,
+               price : 17,
+               soldeAfter: 3
+            }
+        ],
+        numberAccount : 1
+    };
+    
     Handlebars.registerHelper('ifColor', function(a, options){
         if(a>=0) {
             return options.fn(this);
@@ -268,27 +291,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     var price = 0;
     
-    var currentAccount = {
-        name : "Jean-Michel Truc",
-        promo : 61,
-        solde : 100,
-        histo : [
-            {
-               date : "01/01/18 10:01",
-               soldeBefore : 100,
-               price : 15,
-               soldeAfter: 85
-            },
-            {
-                date : "03/01/18 20:02",
-               soldeBefore : 20,
-               price : 17,
-               soldeAfter: 3
-            }
-        ],
-        numberAccount : 1
-    };
-    
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
         $("#research").html(templateResearch);
@@ -297,6 +299,19 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#histo").html(templateHisto(currentAccount.histo));
         $("#account").html(templateCount(currentAccount));
     }
+    
+    $("#serveur").on('click', function(){
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
+        }
+        else{
+            serveur = true;
+            $("#serv").empty();
+            $("#serv").html("Oui");
+        }
+    });
     
     $(".formule").on('click', function(){ //prix serveur si cochés 
         let temp = {
@@ -307,8 +322,9 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("#serveur").is('checked')){
-            temp.price = buttons.find(isInArray).priceS;
+        if(serveur){
+            //temp.price = buttons.find(isInArray).priceS;
+            console.log("test");
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -331,7 +347,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("#serveur").is('checked')){
+        if(serveur){
             temp.price = products.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
@@ -353,6 +369,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         delete line;
         line = new Array();
         $("#recap").html(templateRecap(line));
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
+        }
     });
     
     $("#liquide").on('click', function(){
@@ -366,9 +387,17 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("input[name=serveur]").prop('checked', false);
         }
         $("#recap").html(templateRecap(line));
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
+        }
     });
     
     $("#payer").on('click', function(){ //a changer pour emit
+        if(price == 0){
+            return;
+        }
         if(currentAccount == undefined){
             window.alert("Impossible, pas de compte choisi");
             price = 0;
@@ -408,13 +437,15 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#total").html(price);
         delete line;
         line = new Array();
-        //emit pour BDD 
-        if($("#serveur").is('checked')){
-            $("#serveur").attr('checked', false);
+        socket.emit('Operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
         }
         $("#recap").html(templateRecap(line));
         socket.emit('accNum', {num: currentAccount.numberAccount});
-    }); //mettre emit pour changer le solde BDD + changer les vues (avec un emit)
+    });
     
     $("#linkAccount").on('click', function(){
         document.location.href="./account.html";
@@ -452,7 +483,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
            $("#account").html(templateCount(currentAccount));
         }
         else if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
-            console.log("test");
             $("#info").html(templateAccount(currentAccount));
         }
         $("#closeAccount").on('click', closeAcc);
@@ -496,4 +526,68 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     }
     $("#closeAccount").on('click', closeAcc);
     
+    
+    $("#ajoutRetrait").keypress(function(event){
+        if(event.keyCode == 13){
+            if(currentAccount.solde - $('#ajoutRetrait').val() > -4){
+                let date = new Date();
+                let temp = {
+                    date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
+                    price : $('#ajoutRetrait').val()
+                }
+                socket.emit('Operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
+                $("#ajoutRetrait").val('');
+                socket.emit('accNum', {num : currentAccount.numberAccount});
+            }
+            else{
+                window.alert("Impossible, ce compte passera sous les -4€ de négatif !");
+                $("#ajoutRetrait").val('');
+            }
+        }
+    });
+        
+        
+    //fonction suppression
+    $("#suppr").on('click', function(){
+        socket.emit('accDelete', {num:currentAccount.numberAccount});
+        createCookie('numAccCurr', 'null',0);
+        document.location.href="./index.html";
+    });
+        
+    //fonction ajout NFC
+    $("#addNFC").on('click', function(){
+         socket.emit('NFC', {num : currentAccount.numberAccount, carte : 0/*ajouter NFC*/});
+    });
+    
+    
+    socket.on('accCreate', function(socket){
+        let date = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
+        socket.emit('operation', {num : socket. num,prix : $('input #solde').val(),date : date});
+        createCookie('numAccCurr', currentAccount.numberAccount,0);
+        document.location.href="./account.html";
+    });
+    
+    socket.on('allAccount', function(socket){
+        $("#list").empty();
+        $("#list").html(templateList(socket.account));
+        $(".line").on('click', function(){
+            createCookie('numAccCurr', this.attr('id'),0);
+            document.location.href="./account.html";
+        });
+    }); 
+        
+    $("#all").on('click', function(){  
+        socket.emit('accAll', {num : 2});
+    });
+    $("#pos").on('click', function(){
+        socket.emit('accAll', {num : 0});
+    });
+    $("#neg").on('click', function(){
+        socket.emit('accAll', {num : 1});
+    });
+    
+    $("#create").on('click', function(){
+        socket.emit('accCreate', {nom : $('input #nom').val(),prenom : $('input #prenom').val(),promo : $('input #promo').val()});
+    });
+        
 });
