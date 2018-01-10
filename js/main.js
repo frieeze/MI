@@ -22,10 +22,10 @@ require.config({
 
 
 
-require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
+require([/*"socketio",*/"handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(/*io,*/Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, AccountController, ListController/*, StocksController*/) {
     
-    var socket = io.connect('http://localhost:8080'); 
+    //var socket = io.connect('http://localhost:8080'); 
     var password = "MaisonISEN";
     
     Handlebars.registerHelper('ifColor', function(a, options){
@@ -381,6 +381,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
         if($("input[name=serveur]").is('checked')){
             temp.price = buttons.find(isInArray).priceS;
+			console.log(temp.price);
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -515,7 +516,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
     });
     
-    socket.on('account',function(socket){
+    /*socket.on('account',function(socket){
         console.log('reception');
         console.log(socket);
     })
@@ -526,7 +527,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             socket.emit('accNum', {num: $('input[name=numberSearch]').val()})
             $("#numberSearch").val('');
         }
-    });
+    });*/
     
     
     
