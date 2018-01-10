@@ -7,7 +7,7 @@
 	</head>
 	<body>
         <header>
-            <a id="Accueil" href="./index.html">Maison ISEN</a> <span id="logged">Accès Vendeur</span> - Mot de passe :  <input type="text" name="password" text="password"/>
+            <a id="Accueil" href="./index.html">Maison ISEN</a> <span id="logged">Vendeur</span>  <span id="mdp">Mot de passe : </span> <input id ="password" type="password" name="password" text="password"/><img src="assets/shutdown.png" width="20px" height="20px" id="delog">
             <a href="./list.html">Comptes</a>  <a href="./stocks.html">Stocks</a> <a href="./list.html">Créer Compte</a>
         </header>
         <div id="page">
@@ -21,14 +21,22 @@
                 <div class="table" id="buttons">
                 
                 </div>
-                <div class="table" id="recap">
-                
-                </div>
-                <div class="table" id="histo">
-                
+                <div id="content2">
+                    <div id="content3">
+                        <div class="table" id="recap">
+
+                        </div>
+                        <div class="table" id="histo">
+
+                        </div>
+                    </div>
+                    <div id="caisse"><h3>Caisse</h3>
+                        <span id="tot"> Total : <span id="total">0</span> €</span>
+                        <br/><button id="liquide">Liquide</button> <button id="payer">Payer</button> <button id="cancel">Annuler</button>
+                        <br/> Prix serveurs : <input type="checkbox" id="serveur" name="serveur"/>
+                    </div>
                 </div>
             </div>
-            <br/> Total : <span id="total"></span> €     <button id="liquide">Liquide</button> <button id="payer">Payer</button>  <button id="cancel">Annuler</button>
         </div>
         <footer>
             <p>&copy; Maison ISEN - Chez MaMi - 2018</p> 

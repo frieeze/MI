@@ -36,14 +36,14 @@ compteMdl.count({}, function(err,c){
 	comCount = c;
 });
 
-/*var testC = new compteMdl({prenom: "alexis", nom: "surbayrole", promo: 61, solde: 1000, num: comCount+1});
+var testC = new compteMdl({prenom: "alexis", nom: "surbayrole", promo: 61, solde: 1000, num: comCount+1});
 testC.save();
 var testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12});
 testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12-12});
 testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12*3});
-testCom.save();*/
+testCom.save();
 
 io.sockets.on('accNum',function(socket){
 	var query = compteMdl.find({num: socket});
