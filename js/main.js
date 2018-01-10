@@ -389,6 +389,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
            line.push(temp);
         }
         price = parseFloat(price) + parseFloat(temp.price);
+        price = price.toFixed(2);
         Math.round(price*100)/100;
         $("#total").empty();
         $("#total").html(price);
@@ -401,13 +402,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             price : $("#"+$(this).attr('id')+"Price").text(),
             quantity : 1
         };
-        Math.round(temp.price*100)/100;
         function isInArray(a){
             return temp.name === a.name;
         }
         if(serveur){
             temp.price = buttons.soloProd.find(isInArray).priceS;
-            Math.round(temp.price*100)/100;
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -416,7 +415,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
            line.push(temp);
         }
         price = parseFloat(price) + parseFloat(temp.price);
-        Math.round(price*100)/100;
+        price = price.toFixed(2);
         $("#total").empty();
         $("#total").html(price);
         $("#recap").html(templateRecap(line));
@@ -655,16 +654,16 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     
-    socket.on('accCreateRep', function(socket){
+    socket.on('accCreateRep', function(sockets){
         console.log("créé");
         var date = new Date();
         var date2 = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
         var price = $('#soldeCreate').val();
         console.log(date2);
         console.log(price);
-        console.log(socket);
-        socket.emit('operation', {num : socket.num, prix : price, date : date2}); //valeur
-        createCookie('numAccCurr', socket.num,0);
+        console.log(sockets);
+        socket.emit('operation', {num : sockets.num, prix : price, date : date2}); //valeur
+        createCookie('numAccCurr', sockets.num,0);
         document.location.href="./account.html";
     });
     
