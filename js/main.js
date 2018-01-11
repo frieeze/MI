@@ -555,8 +555,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     
     socket.on('accNameRep', function(sockets){
-        console.log("retour");
-        console.log(sockets);
         $("#names").html(templateNames(sockets.account));
         $(".nameLi").on('click', function(){
             socket.emit('accNum', {num : $(this).attr('id')});
