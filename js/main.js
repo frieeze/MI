@@ -26,7 +26,7 @@ require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!tem
 function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, templList, templNames, AccountController, ListController/*, StocksController*/) {
     
     var socket = io.connect('http://localhost:8080'); 
-    var password = "MaisonISEN";
+    var password = "admin";/*"MaisonISEN";*/
     var serveur = false;
     var entryNFC = false;
     var currentAccount = undefined;
@@ -556,6 +556,10 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     socket.on('accNameRep', function(sockets){
         $("#names").html(templateNames(sockets.account));
+		$(".nameLi").hide();
+		$("#titleSearch").mouseover(function(){
+            $(".nameLi").slideToggle('medium');
+        });
         $(".nameLi").on('click', function(){
             socket.emit('accNum', {num : $(this).attr('id')});
             $("#names").empty();

@@ -1,4 +1,3 @@
-
 <h3>Listes des Comptes</h3>
 <div class="btnDisplay">
 	<button id="all">Tous les Comptes</button>
@@ -15,7 +14,7 @@
 	{{#each this}}
 	<tr class="line" id="{{num}}">
 		<td>{{num}}</td>
-		<td>{{nom}} {{prenom}}</td>
+		<td>{{prenom}} {{nom}}</td>
 		<td>{{promo}}</td>
 		<td>{{solde}} €</td>
 	</tr>
