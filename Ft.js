@@ -69,13 +69,11 @@ io.on('connection', function(socket){
 		});
 	});
 	socket.on('accName', function(info){
-		console.log("name");
-		var query = compteMdl.find({nom: info.name});
+		console.log("name", info);
+		var query = compteMdl.find({nom: new RegExp('^'+info.name, 'mi')});   // {$regex: info.nom ,$options: 'i' }});
 		query.limit(15);
 		query.exec(function(err, acc){
-			if (acc.length > 9){
-            	acc = res.slice(acc.length-9);
-            }
+			console.log('account', acc);
 			socket.emit('accNameRep', {account: acc});
 		});
 	});

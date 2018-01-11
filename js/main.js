@@ -553,8 +553,8 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     
-    socket.on('accNameRep', function(socket){
-        $("#names").html(templatesNames(socket.account));
+    socket.on('accNameRep', function(sockets){
+        $("#names").html(templateNames(sockets.account));
         $(".nameLi").on('click', function(){
             socket.emit('accNum', {num : $(this).attr('id')});
             $("#names").empty();
