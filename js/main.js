@@ -344,24 +344,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     var price = 0;
     
     var currentAccount = {
-        name : "Jean-Michel Truc",
-        promo : 61,
-        solde : 100,
-        histo : [
-            {
-               date : "01/01/18 10:01",
-               soldeBefore : 100,
-               price : 15,
-               soldeAfter: 85
-            },
-            {
-                date : "03/01/18 20:02",
-               soldeBefore : 20,
-               price : 17,
-               soldeAfter: 3
-            }
-        ],
-        numberAccount : 1
+        
     };
     
     
@@ -370,7 +353,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         $("#buttons").html(templateButtons(buttons));
         $("#recap").html(templateRecap(line));
         $("#histo").html(templateHisto(currentAccount.histo));
-        $("#account").html(templateCount(currentAccount));
+        //$("#account").html(templateCount(currentAccount));
     }
     
     $(".formule").on('click', function(){ //prix serveur si cochés 

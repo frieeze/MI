@@ -10,9 +10,9 @@
 		<th>Solde</th>
 	</tr>
 	{{#each this}}
-	<tr class="line" id="{{numberAccount}}">
-		<td>{{numberAccount}}</td>
-		<td>{{name}}</td>
+	<tr class="line" id="{{num}}">
+		<td>{{num}}</td>
+		<td>{{name}} {{prenom}}</td>
 		<td>{{promo}}</td>
 		<td>{{solde}} €</td>
 	</tr>
