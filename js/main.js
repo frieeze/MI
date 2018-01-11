@@ -655,6 +655,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         entryNFC = true;
     });
     
+    socket.on('newNFC', function(data){
+        entryNFC = false;
+        socket.emit('NFC', {num : currentAccount.numberAccount, carte: data.carte});
+        window.alert("Carte ajoutée");
+    })
     
 
     socket.on('accCreateRep', function(data){
@@ -680,6 +685,9 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
         
     $("#create").on('click', function(){
+        if($('#nomCreate').val() == '' || $('#prenomCreate').val() == '' || $('#promoCreate').val() == '' || $('#soldeCreate').val() == ''){
+            return;
+        }
         console.log("test");
         socket.emit('accCreate', {nom : $('#nomCreate').val(),prenom : $('#prenomCreate').val(),promo : $('#promoCreate').val()});
     });
