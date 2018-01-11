@@ -79,9 +79,12 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#suppr").show();
         }
     }
-    if(readCookie('numAccCurr') != 'null'){
+    if(document.cookie.indexOf('accNum') != -1){
         socket.emit('accNum', {num: readCookie('numAccCurr')});
-    }else console.log('test');
+    }
+    else{
+        console.log("test");
+    }
 
     var templateButtons = Handlebars.compile(templButtons);
     var templateCount = Handlebars.compile(templCount);
@@ -367,7 +370,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     $(".formule").on('click', function(){ //prix serveur si cochés 
-        let temp = {
+        var temp = {
             name : $("#"+$(this).attr('id')+"Name").text(),
             price : $("#"+$(this).attr('id')+"Price").text(),
             quantity : 1
@@ -393,7 +396,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     $(".prod").on('click', function(){ //prix serveur si cochés 
-        let temp = {
+        var temp = {
             name : $("#"+$(this).attr('id')+"Name").text(),
             price : $("#"+$(this).attr('id')+"Price").text(),
             quantity : 1
@@ -666,7 +669,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     socket.on('allAccount', function(socket){
-        console.log('All Account reçu');
         $("#list").empty();
         console.log(socket);
         $("#list").html(templateList(socket.account));
