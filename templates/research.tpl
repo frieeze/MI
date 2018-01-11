@@ -6,6 +6,4 @@
 	<img width="20px" height="20px" src="./assets/tools.png"/>
 	<input placeholder="Numéro" type="text" id="numberSearch" name="numberSearch"/>
 </div>
-<!--
 <div id="names"></div>
--->
