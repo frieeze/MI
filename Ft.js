@@ -50,16 +50,16 @@ testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12*3});
 testCom.save();*/
 
+
 var uid = ""; 
 console.log(uid); 
 var SerialPort = require('serialport');
-const ByteLength = SerialPort.parsers.ByteLength
+const ByteLength = SerialPort.parsers.ByteLength;
 const Readline = SerialPort.parsers.Readline;
 var port = new SerialPort('/dev/ttyACM0', {
 	baudRate: 9600	
 });
 const parser = port.pipe(new Readline());
-
 
 
 io.on('connection', function(socket){
@@ -135,12 +135,12 @@ io.on('connection', function(socket){
 			socket.emit('done', {msg: "compte et carte synchronisés"});
 		});
 	});
-
+	
 	parser.on('data', function(data){
 		if(uid != data){
 			uid = data; 
 			console.log(uid); 
-		
+			
 			compteMdl.find({idCarte: uid}, function(err, acc){
 				if (err) throw err;
 				if (acc.length == 0){
