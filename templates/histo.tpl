@@ -9,9 +9,9 @@
 {{#each this}}
 	<tr>
     	<td>{{date}}</td>
-		<td>{{soldeBefore}} €</td>
-		<td>{{price}} €</td>
-		<td>{{soldeAfter}} €</td>
+		<td>{{soldeAv}} €</td>
+		<td>{{prix}} €</td>
+		<td>{{soldeAp}} €</td>
 	</tr>
 {{/each}}
 </table>

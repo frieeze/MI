@@ -1,3 +1,4 @@
+
 <h3>Listes des Comptes</h3>
 <button id="pos">Comptes positifs</button>
 <button id="neg">Comptes négatifs</button>
@@ -12,7 +13,7 @@
 	{{#each this}}
 	<tr class="line" id="{{num}}">
 		<td>{{num}}</td>
-		<td>{{name}} {{prenom}}</td>
+		<td>{{nom}} {{prenom}}</td>
 		<td>{{promo}}</td>
 		<td>{{solde}} €</td>
 	</tr>

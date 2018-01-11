@@ -6,10 +6,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/MI');
 mongoose.connection.once('connected', function(){
 	console.log("Database connected successfully");
 });
-server.listen(80);
+server.listen(8080);
 
 
 var tplCompte = new mongoose.Schema({
+	exist: {type: Boolean, default: 1},
 	prenom: String,
 	nom: String, 
 	promo: Number, 
@@ -20,10 +21,11 @@ var tplCompte = new mongoose.Schema({
 
 var hisTran = new mongoose.Schema({
 	num: Number,
-	date: {type: Date, default:Date.now},
+	date: String,
 	soldeAv: Number,
 	soldeAp: Number,
-	prix: Number
+	prix: Number,
+	negatif: Boolean
 });
 
 var compteMdl = mongoose.model('compteMdl', tplCompte);
@@ -53,9 +55,7 @@ io.on('connection', function(socket){
 		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
-			console.log(acc);
 		});
-		console.log(tmpAcc);
 		query = allTran.find({num: info.num});
 		query.limit(10);
 		query.exec(function(err,acc){
@@ -63,6 +63,7 @@ io.on('connection', function(socket){
 		});
 	});
 	socket.on('accName', function(info){
+		console.log("name");
 		var query = compteMdl.find({nom: info.name});
 		var tmpAcc;
 		query.exec(function(err, acc){
@@ -87,26 +88,33 @@ io.on('connection', function(socket){
 		});
 	});
 	socket.on('operation', function(info){
-		var query = compteMdl.find({num: number.num});
+		console.log("operation");
+		var query = compteMdl.find({num: info.num});
 		var tmpAcc;
 		query.exec(function(err, acc){
 			tmpAcc = acc;
 		});
-		var trans = new allTran({num: info.num, soldeAv: tmpAcc.solde, soldeAp: tmpAcc.solde+info.prix, prix: info.prix});
+		var trans = new allTran({num: info.num, soldeAv: tmpAcc.solde, soldeAp: tmpAcc.solde+info.prix, prix: info.prix, date: info.date});
 		trans.save();
 		tmpAcc.solde += info.prix;
+		if(tmpAcc.solde <0){
+			tmpAcc.negatif = 1;
+		}else{tmpAcc.negatif = 0;}
 		tmpAcc.save();
 	});
 	socket.on('accCreate', function(info){
+		console.log("create");
 		var comCount;
 		compteMdl.count({}, function(err,c){
 			comCount = c;
 		});
-		var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, idCarte: info.carte, num: comCount+1});
+		var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, num: comCount+1});
 		newAcc.save();
 		socket.emit('accCreateRep', {num: newAcc.num});
+		console.log(newAcc);
 	});
 	socket.on('accDelete', function(info){
+		console.log("delete");
 		compteMdl.remove({num: info.num});
 		allTran.remove({num: info.num});
 	});
@@ -115,7 +123,23 @@ io.on('connection', function(socket){
 			if(err) throw err;
 			socket.emit('done', {msg: "compte et carte synchronisés"});
 		});
-	})
+	});
+	socket.on('accAll', function(info){
+		console.log('comptes');
+		if(info.num == 2){
+			console.log('tous');
+			var query = compteMdl.find({exist: 1});
+			query.exec(function(err, acc){
+				socket.emit('allAccount', {account: acc});
+			});	
+		}
+		else {
+			var query = compteMdl.find({negatif: info.num});
+			query.exec(function(err, acc){
+				socket.emit('allAccount', {account: acc});
+			});
+		}
+	});
 
 });
 

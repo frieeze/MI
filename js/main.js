@@ -22,12 +22,13 @@ require.config({
 
 
 
-
-require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
-function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, AccountController, ListController/*, StocksController*/) {
+require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!templates/count.tpl","text!templates/histo.tpl","text!templates/recap.tpl","text!templates/research.tpl","text!templates/account.tpl","text!templates/list.tpl","text!templates/names.tpl","js/account.js","js/list.js"/*,"js/stocks.js"*/],
+function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, templList, templNames, AccountController, ListController/*, StocksController*/) {
     
-    var socket = io.connect('http://localhost:80'); 
+    var socket = io.connect('http://localhost:8080'); 
     var password = "MaisonISEN";
+    var serveur = false;
+    var currentAccount = undefined;
     
     Handlebars.registerHelper('ifColor', function(a, options){
         if(a>=0) {
@@ -48,7 +49,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         else var expires = "";
         document.cookie = name+"="+value+expires+"; path=/";
     }
-
     function readCookie(name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
@@ -59,13 +59,12 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
         return null;
     }
-
     function eraseCookie(name) {
         createCookie(name,"",-1);
     }
     //-----------------------------------------------------
 
-    if(readCookie('admin') == null || readCookie('admin') == 'false'){
+    if(readCookie('admin') == 'null' || readCookie('admin') == 'false'){
         admin = false;
     }
     else if(readCookie('admin') == 'true'){
@@ -80,29 +79,28 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("#suppr").show();
         }
     }
-    
-    if(readCookie('numAccCurr') != null){
-        //socket.emit('accNum', {num: readCookie('numAccCurr')});
+    if(readCookie('numAccCurr') != 'null'){
+        socket.emit('accNum', {num: readCookie('numAccCurr')});
     }
-    
+
     var templateButtons = Handlebars.compile(templButtons);
     var templateCount = Handlebars.compile(templCount);
     var templateAccount = Handlebars.compile(templAccount);
     var templateHisto = Handlebars.compile(templHisto);
     var templateRecap = Handlebars.compile(templRecap);
     var templateResearch = Handlebars.compile(templResearch);
+    var templateList = Handlebars.compile(templList);
+    var templateNames = Handlebars.compile(templNames);
     
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
         var accountView = new AccountController();
-        console.log("test");
     }
-    
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "list.html"){
         var listView = new ListController();
+        socket.emit('accAll', {num : 2});
     }
     
     var line = new Array();
-    
     var products = [ //ajouter tag a chaque produit
         {
           name : "Coca",
@@ -297,7 +295,6 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
 		  priceS : 1.5
         }
     ];
-    
     var buttons = {
         formules : [
             {
@@ -340,21 +337,31 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         ],
         soloProd : products
     };
-    
     var price = 0;
     
-    var currentAccount = {
-        
-    };
-    
-    
+
     if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){ //les autres pages js s'occupent de leur propres templates
         $("#research").html(templateResearch);
         $("#buttons").html(templateButtons(buttons));
         $("#recap").html(templateRecap(line));
-        $("#histo").html(templateHisto(currentAccount.histo));
-        //$("#account").html(templateCount(currentAccount));
+        if(currentAccount != undefined){
+            $("#histo").html(templateHisto(currentAccount.histo));
+            $("#account").html(templateCount(currentAccount));
+        }
     }
+    
+    $("#serveur").on('click', function(){
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
+        }
+        else{
+            serveur = true;
+            $("#serv").empty();
+            $("#serv").html("Oui");
+        }
+    });
     
     $(".formule").on('click', function(){ //prix serveur si cochés 
         let temp = {
@@ -365,9 +372,9 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("#serveur").is('checked')){
-            temp.price = buttons.find(isInArray).priceS;
-			console.log(temp.price);
+        if(serveur){
+            temp.price = buttons.formules.find(isInArray).priceS
+            console.log("test");
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -390,8 +397,8 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         function isInArray(a){
             return temp.name === a.name;
         }
-        if($("#serveur").is('checked')){
-            temp.price = products.find(isInArray).priceS;
+        if(serveur){
+            temp.price = buttons.soloProd.find(isInArray).priceS;
         }
         if(line.find(isInArray)){
             line.find(isInArray).quantity++;
@@ -412,6 +419,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         delete line;
         line = new Array();
         $("#recap").html(templateRecap(line));
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
+        }
     });
     
     $("#liquide").on('click', function(){
@@ -425,9 +437,17 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
             $("input[name=serveur]").prop('checked', false);
         }
         $("#recap").html(templateRecap(line));
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
+        }
     });
     
-    $("#payer").on('click', function(){
+    $("#payer").on('click', function(){ //a changer pour emit
+        if(price == 0){
+            return;
+        }
         if(currentAccount == undefined){
             window.alert("Impossible, pas de compte choisi");
             price = 0;
@@ -460,25 +480,22 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         let date = new Date();
         let temp = {
             date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
-            soldeBefore: currentAccount.solde,
-            soldeAfter: 0,
-            price : price
+            price : - price
         }
-        currentAccount.solde = parseFloat(currentAccount.solde) - parseFloat(price);
-        temp.soldeAfter = currentAccount.solde;
         price = 0;
         $("#total").empty();
         $("#total").html(price);
         delete line;
         line = new Array();
-        currentAccount.histo.push(temp);
-        if($("input[name=serveur]").is('checked')){
-            $("input[name=serveur]").prop('checked', false);
-        }
         $("#recap").html(templateRecap(line));
-        $("#soldeSpan").html(currentAccount.solde);
-        $("#histo").html(templateHisto(currentAccount.histo));
-    }); //mettre emit pour changer le solde BDD
+        if(serveur){
+            serveur = false;
+            $("#serv").empty();
+            $("#serv").html("Non");
+        }
+        socket.emit('operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
+        socket.emit('accNum', {num: currentAccount.numberAccount});
+    });
     
     $("#linkAccount").on('click', function(){
         document.location.href="./account.html";
@@ -502,37 +519,39 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         }
     });
     
-
     socket.on('account',function(socket){
+        console.log(socket);
         delete currentAccount;
         currentAccount = {
             name : socket.account[0].prenom + " " + socket.account[0].nom,
             promo : socket.account[0].promo,
             solde : socket.account[0].solde, 
             numberAccount : socket.account[0].num,
-            histo : new Array()
+            histo : socket.hist
         };
         if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "index.html"){
            $("#account").html(templateCount(currentAccount));
         }
         else if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
-            console.log("test");
             $("#info").html(templateAccount(currentAccount));
         }
-        $("#closeAccount").on('click', delog);
+        $("#closeAccount").on('click', closeAcc);
         $("#linkAccount").on('click', function(){
             document.location.href="./account.html";
         });
-        $("#histo").html(templateHisto());
+        $("#histo").html(templateHisto(currentAccount.histo));
         createCookie('numAccCurr', currentAccount.numberAccount, 0);
-    })
+    });
     
-    socket.on('accHist',function(socket){
-        console.log('reception');
-        console.log(socket);
-        
-        $("#histo").html(templateHisto());
-    })
+    
+    socket.on('accNameRep', function(socket){
+        $("#names").html(templatesNames(socket.account));
+        $(".nameLi").on('click', function(){
+            socket.emit('accNum', {num : $(this).attr('id')});
+            $("#names").empty();
+            $("#nameSearch").val('');
+        });
+    });
     
     $("#numberSearch").keypress(function(event){
         if(event.keyCode == 13){
@@ -542,6 +561,20 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     
+    $("#nameSearch").keypress(function(event){
+        var temp = $("#nameSearch").val()
+        if(temp.length < 3){
+            return;
+        }
+        else if(event.keyCode == 13){
+            socket.emit('accName', {name: $("#nameSearch").val()});
+            $("#names").empty();
+            $("#nameSearch").val('');
+        }
+        else{
+            socket.emit('accName', {name: $("#nameSearch").val()});
+        }
+    });
     
     $("#delog").on('click', function(){
         admin = false;
@@ -556,14 +589,88 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         createCookie('admin','false',0);
     });
     
-    
-    var delog = function(){
+    var closeAcc = function(){
         currentAccount = undefined;
         createCookie('numAccCurr', null, 0);
         //mettre cookie a null
         $("#histo").html(templateHisto());
         $("#account").empty();
     }
-    $("#closeAccount").on('click', delog);
+    $("#closeAccount").on('click', closeAcc);
     
+    $("#ajoutRetrait").keypress(function(event){
+        if(event.keyCode == 13){
+            if(currentAccount.solde - $('#ajoutRetrait').val() > -4){
+                let date = new Date();
+                let temp = {
+                    date: date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes(),
+                    price : $('#ajoutRetrait').val()
+                }
+                socket.emit('operation', {num : currentAccount.numberAccount, prix : temp.price, date : temp.date});
+                $("#ajoutRetrait").val('');
+                socket.emit('accNum', {num : currentAccount.numberAccount});
+            }
+            else{
+                window.alert("Impossible, ce compte passera sous les -4€ de négatif !");
+                $("#ajoutRetrait").val('');
+            }
+        }
+    });
+    
+    var bindListButton = function(){
+      $("#all").on('click', function(){  
+            console.log("2");
+            socket.emit('accAll', {num : 2});
+        });
+        $("#pos").on('click', function(){
+            console.log("0");
+            socket.emit('accAll', {num : 0});
+        });
+        $("#neg").on('click', function(){
+            console.log("1");
+            socket.emit('accAll', {num : 1});
+        });  
+    };
+    
+    $("#suppr").on('click', function(){
+        socket.emit('accDelete', {num: currentAccount.numberAccount});
+        createCookie('numAccCurr', 'null',0);
+        document.location.href="./index.html";
+    });
+        
+    //fonction ajout NFC
+    $("#addNFC").on('click', function(){
+         socket.emit('NFC', {num : currentAccount.numberAccount, carte : 0/*ajouter NFC*/});
+    });
+    
+    
+    socket.on('accCreateRep', function(socket){
+        console.log("créé");
+        var date = new Date();
+        var date2 = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
+        var price = $('#soldeCreate').val();
+        console.log(date2);
+        console.log(price);
+        console.log(socket);
+        socket.emit('operation', {num : socket.num, prix : price, date : date2}); //valeur
+        createCookie('numAccCurr', socket.num,0);
+        document.location.href="./account.html";
+    });
+    
+    socket.on('allAccount', function(socket){
+        $("#list").empty();
+        console.log(socket);
+        $("#list").html(templateList(socket.account));
+        bindListButton();
+        $(".line").on('click', function(){
+            createCookie('numAccCurr', this.attr('id'),0);
+            document.location.href="./account.html";
+        });
+    });
+        
+    $("#create").on('click', function(){
+        console.log("test");
+        socket.emit('accCreate', {nom : $('#nomCreate').val(),prenom : $('#prenomCreate').val(),promo : $('#promoCreate').val()});
+    });
+        
 });
