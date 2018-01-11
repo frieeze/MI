@@ -1,8 +1,10 @@
 
 <h3>Listes des Comptes</h3>
-<button id="pos">Comptes positifs</button>
-<button id="neg">Comptes négatifs</button>
-<button id="all">Supprimer Filtres</button>
+<div class="btnDisplay">
+	<button id="all">Tous les Comptes</button>
+	<button id="pos">Comptes positifs</button>
+	<button id="neg">Comptes négatifs</button>
+</div>
 <table class="view">
 	<tr>
 		<th>Numéro</th>

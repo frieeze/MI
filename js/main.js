@@ -66,6 +66,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
 
     if(readCookie('admin') == 'null' || readCookie('admin') == 'false'){
         admin = false;
+		$("#delog").hide();
     }
     else if(readCookie('admin') == 'true'){
         admin = true;
@@ -358,14 +359,14 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     $("#serveur").on('click', function(){
         if(serveur){
-            serveur = false;
-            $("#serv").empty();
-            $("#serv").html("Non");
+			serveur = false;
+			$("#serveur").css("color","red");
+            $("#serveur").html("Tarifs Serveurs Désactivés");
         }
         else{
             serveur = true;
-            $("#serv").empty();
-            $("#serv").html("Oui");
+			$("#serveur").css("color", "green");
+            $("#serveur").html("Tarifs Serveurs Activés");
         }
     });
     

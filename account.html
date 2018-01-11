@@ -8,8 +8,14 @@
 	</head>
 	<body>
         <header>
-            <a id="Accueil" href="./index.html">Maison ISEN</a> <span id="logged">Vendeur</span>  <span id="mdp">Mot de passe : </span> <input id ="password" type="password" name="password" text="password"/><img src="assets/shutdown.png" width="20px" height="20px" id="delog">
-            <a href="./list.html">Comptes</a>  <a href="./stocks.html">Stocks</a> <a href="./list.html">Créer Compte</a>
+            <a id="Accueil" href="./index.html">Maison ISEN</a>
+            <a href="./list.html">Comptes</a>
+			<a href="./stocks.html">Stocks</a>
+			<a href="./list.html">Créer Compte</a>
+			<span id="logged">Vendeur</span>
+			<span id="mdp">Mot de passe : </span>
+			<input id ="password" type="password" name="password" text="password" placeholder="Connexion Admin"/>
+			<img src="assets/shutdown.png" width="20px" height="20px" id="delog">
         </header>
         <div id="page">
             <div id="research">
@@ -22,8 +28,10 @@
 				<div class="table" id="modif">
 					<h3>Modifier le Solde</h3>
 					<input id="ajoutRetrait" type="text" name="entry" placeholder="Nouveau Solde"/> €
-					<br/> <input type="button" id="addNFC" value="Ajouter Carte"/>
+					<div class="btnDisplay">
+					<input type="button" id="addNFC" value="Ajouter Carte"/>
 					<input type="button" id="suppr" value="Supprimer le compte"/>
+					</div>
 				</div>
             </div>
         </div>
