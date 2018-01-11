@@ -50,17 +50,16 @@ testCom.save();
 
 io.on('connection', function(socket){
 	socket.on('accNum', function(info){
-		console.log("accNum reçu");
+		console.log("accNum reçu", info.num);
 		var query = compteMdl.find({num: info.num});
 		var tmpAcc;
 		query.exec(function(err, acc){
-			tmpAcc = acc;
-		});
-        console.log("accNum", tmpAcc);
-		query = allTran.find({num: info.num});
-		query.limit(10);
-		query.exec(function(err,acc){
-			socket.emit('account', {account: tmpAcc, hist: acc});
+	        console.log("accNum", acc);
+			var subquery = allTran.find({num: info.num});
+			subquery.limit(10);
+			subquery.exec(function(err,rep){
+				socket.emit('account', {account: acc, hist: rep});
+			});
 		});
 	});
 	socket.on('accName', function(info){
@@ -134,11 +133,12 @@ io.on('connection', function(socket){
 		});
 	});
 	socket.on('accAll', function(info){
-		console.log('comptes');
+		console.log('comptes', info);
 		if(info.num == 2){
 			console.log('tous');
 			var query = compteMdl.find({exist: 1});
 			query.exec(function(err, acc){
+				console.log('all accounts', acc)
 				socket.emit('allAccount', {account: acc});
 			});	
 		}
