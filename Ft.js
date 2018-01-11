@@ -1,3 +1,4 @@
+var math = require('mathjs');
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -60,8 +61,10 @@ io.on('connection', function(socket){
 			var subquery = allTran.find({num: info.num});
 			subquery.limit(10);
 			subquery.exec(function(err,rep){
+				if (rep.length > 9){
+                	rep = rep.slice(res.length-9);
+                }
 				socket.emit('account', {account: acc, hist: rep});
-				console.log('trans', rep);
 			});
 		});
 	});
@@ -70,6 +73,9 @@ io.on('connection', function(socket){
 		var query = compteMdl.find({nom: info.name});
 		query.limit(15);
 		query.exec(function(err, acc){
+			if (acc.length > 9){
+            	acc = res.slice(acc.length-9);
+            }
 			socket.emit('accNameRep', {account: acc});
 		});
 	});
@@ -90,7 +96,7 @@ io.on('connection', function(socket){
 		var query = compteMdl.find({num: info.num});
 		query.exec(function(err, acc){
 			var tmp = acc[0].solde+info.prix;
-			tmp = tmp.toFixed(2);
+			tmp = math.round(tmp, 2);
             var trans = new allTran({num: info.num, soldeAv: acc[0].solde, soldeAp: tmp , prix: info.prix, date: info.date});
             trans.save();
             acc[0].solde = tmp;
@@ -98,21 +104,16 @@ io.on('connection', function(socket){
                 acc[0].negatif = 1;
             }else{acc[0].negatif = 0;}
             acc[0].save();
-            allTran.count({num: info.num},function(err,c){
-            	if(c == 11){
-            		console.log("y'en a plus de 10");
-            		allTran.findOneAndRemove({num: info.num}, function(err, c){
-	            		if(err) throw err;
-            			console.log("y'en a plus que 10");
-            		});
-            	}
-            });
             console.log("acc[0]", acc[0]);
             var subquery = allTran.find({num: info.num});
             subquery.exec(function(err,res){
                 console.log('res', res);
-                res.push(trans);
+                if (res.length > 9){
+                	res = res.slice(res.length-9);
+                }
+            	res.push(trans);
                 socket.emit('account', {account: acc, hist: res});
+                
             });
             
 		});		
@@ -120,7 +121,6 @@ io.on('connection', function(socket){
         
 	socket.on('accCreate', function(info){
 		console.log("create");
-		var comCount;
 		compteMdl.count({}, function(err,c){
 			var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, num: c+1});
 			newAcc.save();
