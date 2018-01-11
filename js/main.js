@@ -655,16 +655,16 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     
-    socket.on('accCreateRep', function(socket){
+    socket.on('accCreateRep', function(data){
         console.log("créé");
         var date = new Date();
         var date2 = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+" - "+date.getHours()+":"+date.getMinutes();
         var price = $('#soldeCreate').val();
         console.log(date2);
         console.log(price);
-        console.log(socket);
-        socket.emit('operation', {num : socket.num, prix : price, date : date2}); //valeur
-        createCookie('numAccCurr', socket.num,0);
+        console.log(data);
+        socket.emit('operation', {num : data.num, prix : price, date : date2}); //valeur
+        createCookie('numAccCurr', data.num,0);
         document.location.href="./account.html";
     });
     
