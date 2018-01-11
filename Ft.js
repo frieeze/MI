@@ -42,12 +42,12 @@ var testC = new compteMdl({prenom: "alexis", nom: "surbayrole", promo: 61, solde
 testC.save();
 var testC = new compteMdl({prenom: "tim", nom: "babwe", promo: 61, solde: 0, num: 2});
 testC.save();
-var testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12});
+/*var testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12});
 testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12-12});
 testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12*3});
-testCom.save();
+testCom.save();*/
 
 
 io.on('connection', function(socket){
@@ -61,20 +61,16 @@ io.on('connection', function(socket){
 			subquery.limit(10);
 			subquery.exec(function(err,rep){
 				socket.emit('account', {account: acc, hist: rep});
+				console.log('trans', rep);
 			});
 		});
 	});
 	socket.on('accName', function(info){
 		console.log("name");
 		var query = compteMdl.find({nom: info.name});
-		var tmpAcc;
+		query.limit(15);
 		query.exec(function(err, acc){
-			tmpAcc = acc;
-		});
-		query = allTran.find({num: tmpAcc.num});
-		query.limit(10);
-		query.exec(function(err,acc){
-			socket.emit('account', {account: tmpAcc, hist: acc});
+			socket.emit('accNameRep', {account: acc});
 		});
 	});
 	socket.on('accNFC', function(info){
@@ -93,16 +89,26 @@ io.on('connection', function(socket){
 		console.log("operation");
 		var query = compteMdl.find({num: info.num});
 		query.exec(function(err, acc){
-            var trans = new allTran({num: info.num, soldeAv: acc[0].solde, soldeAp: acc[0].solde+info.prix, prix: info.prix, date: info.date});
+			var tmp = acc[0].solde+info.prix;
+			tmp = tmp.toFixed(2);
+            var trans = new allTran({num: info.num, soldeAv: acc[0].solde, soldeAp: tmp , prix: info.prix, date: info.date});
             trans.save();
-            acc[0].solde += info.prix;
+            acc[0].solde = tmp;
             if(acc[0].solde <0){
                 acc[0].negatif = 1;
             }else{acc[0].negatif = 0;}
             acc[0].save();
+            allTran.count({num: info.num},function(err,c){
+            	if(c == 11){
+            		console.log("y'en a plus de 10");
+            		allTran.findOneAndRemove({num: info.num}, function(err, c){
+	            		if(err) throw err;
+            			console.log("y'en a plus que 10");
+            		});
+            	}
+            });
             console.log("acc[0]", acc[0]);
             var subquery = allTran.find({num: info.num});
-            subquery.limit(10);
             subquery.exec(function(err,res){
                 console.log('res', res);
                 res.push(trans);
@@ -124,8 +130,8 @@ io.on('connection', function(socket){
 	});
 	socket.on('accDelete', function(info){
 		console.log("delete");
-		compteMdl.remove({num: info.num});
-		allTran.remove({num: info.num});
+		compteMdl.remove({num: info.num}, function(err, c){console.log("compte supprimé");});
+		allTran.remove({num: info.num}, function (err,c){console.log("transaction finies");});
 	});
 	socket.on('NFC', function(info){
 		compteMdl.update({num: info.num}, {idCarte: info.nfc}, function(err){
