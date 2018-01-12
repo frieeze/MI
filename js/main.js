@@ -664,9 +664,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
     
     socket.on('newNFC', function(data){
-        entryNFC = false;
-        socket.emit('NFC', {num : currentAccount.numberAccount, carte: data.carte});
-        window.alert("Carte ajoutée");
+        if(document.location.href.substring(document.location.href.lastIndexOf( "/" )+1 ) == "account.html"){
+          entryNFC = false;
+          socket.emit('NFC', {num : currentAccount.numberAccount, carte: data.carte});
+          window.alert("Carte ajoutée");
+        }
     })
     
 

@@ -148,7 +148,9 @@ io.on('connection', function(socket){
 			change = 0;
 			compteMdl.find({idCarte: uid}, function(err, acc){
 				if (err) throw err;
+				console.log('nfc', acc);
 				if (acc.length == 0){
+						console.log("newNFC");
 						socket.emit('newNFC', {carte: uid});
 				}else{
 					var query = allTran.find({num: info.num});
