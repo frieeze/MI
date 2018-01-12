@@ -123,27 +123,31 @@ io.on('connection', function(socket){
 	});
         
 	socket.on('accCreate', function(info){
-		console.log("create");
-		compteMdl.count({}, function(err,c){
-			var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, num: c+1});
+		console.log('accCreate', info);
+		var last = compteMdl.findOne().sort({ field: 'asc', _id: -1 }).limit(1).exec(function(err, c){
+			console.log(c);
+			var newAcc = new compteMdl({nom: info.nom, prenom: info.prenom, promo: info.promo, num: c.num+1});
 			newAcc.save();
 			socket.emit('accCreateRep', {num: newAcc.num});
 			console.log(newAcc);
-		});
+		});	
 	});
+		
 	socket.on('accDelete', function(info){
 		console.log("delete");
 		compteMdl.remove({num: info.num}, function(err, c){console.log("compte supprimé");});
 		allTran.remove({num: info.num}, function (err,c){console.log("transaction finies");});
 	});
 	socket.on('NFC', function(info){
-		compteMdl.update({num: info.num}, {idCarte: info.nfc}, function(err){
+		console.log('nfc write', info);
+		compteMdl.find({num: info.num}, function(err, acc){
 			if(err) throw err;
-			socket.emit('done', {msg: "compte et carte synchronisés"});
+			acc[0].idCarte = info.carte;
+			acc[0].save();	
+			socket.emit('done', {msg: "compte et carte synchronisés"});			
 		});
 	});
 	socket.on('checkNFC', function(info){
-		console.log('check recieved');
 		if(change == 1){
 			change = 0;
 			compteMdl.find({idCarte: uid}, function(err, acc){
@@ -153,7 +157,7 @@ io.on('connection', function(socket){
 						console.log("newNFC");
 						socket.emit('newNFC', {carte: uid});
 				}else{
-					var query = allTran.find({num: info.num});
+					var query = allTran.find({num: 	acc[0].num});
 					query.exec(function(err,rep){
 						if (rep.length > 9){
 	                		rep = rep.slice(rep.length-9);
