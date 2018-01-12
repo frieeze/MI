@@ -59,7 +59,14 @@ var port = new SerialPort('/dev/ttyACM0', {
 	baudRate: 9600	
 });
 const parser = port.pipe(new Readline());
-
+var change = 0;
+parser.on('data', function(data){
+	change = 1; 
+	if(uid != data){
+		uid = data;
+		console.log(uid); 
+	}
+});
 
 
 io.on('connection', function(socket){
@@ -136,11 +143,10 @@ io.on('connection', function(socket){
 		});
 	});
 
-	parser.on('data', function(data){
-		if(uid != data){
-			uid = data; 
-			console.log(uid); 
-		
+	socket.on('checkNFC', function(info){
+		console.log('check recieved');
+		if(change == 1){
+			change = 0;
 			compteMdl.find({idCarte: uid}, function(err, acc){
 				if (err) throw err;
 				if (acc.length == 0){
@@ -154,7 +160,7 @@ io.on('connection', function(socket){
 						socket.emit('account', {account: acc, hist: rep});
 					});
 				}
-			})
+			});
 		}
 	});
 

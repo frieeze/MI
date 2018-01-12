@@ -552,7 +552,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         createCookie('numAccCurr', currentAccount.numberAccount, 0);
     });
     
-    
+    setInterval(function(){
+        console.log('check');
+        socket.emit('checkNFC');
+    }, 3000);
+
     socket.on('accNameRep', function(sockets){
         $("#names").html(templateNames(sockets.account));
         $(".nameLi").on('click', function(){
