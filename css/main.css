@@ -8,11 +8,12 @@ body {
     color: #444;
 	max-height: 100%;
 	max-width: 100%;
-    
+    margin: 0px;
 }
 
 header {
     bottom: 0;
+	height: 30px;
     background-color: #24292e;
     color: rgba(255,255,255,0.75);
     font-size: 14px;
@@ -30,7 +31,7 @@ header a,span{
 
 header img {
     margin-top: 3px;
-    margin-left: 5px;
+	margin-right: 10%;
 }
 
 footer {
@@ -49,8 +50,8 @@ footer p {
 }
 
 #content{
-    margin-right: 10%;
-    margin-left: 10%;
+    margin-right: 30px;
+    margin-left: 30px;
     padding: 10px;
     display: flex;
     justify-content: center;
@@ -68,9 +69,8 @@ footer p {
 
 .table {
     border: solid #000 1px;
-    padding: 2px;
+    padding: 10px;
     margin: 15px;
-    
     box-shadow: 2px 2px 10px darkgray;
     text-align: center;
     background-color: #f5f5f5;
@@ -95,6 +95,10 @@ footer p {
 	max-height: 120px;
 }
 
+#infos{
+	flex-direction: row;
+}
+
 .prod {
     min-width: 20%;
     max-width: 30%;
@@ -102,7 +106,6 @@ footer p {
     padding: 2px;
     margin: 1px;
     background-color: darkseagreen;
-    
     box-shadow: 2px 2px 10px darkgray;
     border-radius: 4px ;
 }
@@ -110,6 +113,7 @@ footer p {
 #histo{
 	margin-left: 0px;
 	margin-right: 0px;
+	min-height: 60%;
 }
 
 #buttons{
@@ -117,7 +121,6 @@ footer p {
     justify-content: center;
     flex-direction: column;
     max-width: 35%;
-    margin-bottom: 35px;
     max-height: 40%;
 	font-size: small;
 	margin-left: 0px;
@@ -151,6 +154,20 @@ footer p {
 	padding-right: 10px;
 }
 
+.btnDisplay {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+}
+
+.btnDisplay button{
+	margin: 2px;
+}
+
+.view{
+	width: 100%;
+}
+
 #account{
     background-color: #f5f5f5;
     border-bottom: solid 1px black;
@@ -159,6 +176,10 @@ footer p {
     padding-left: 15%;
     display: flex;
     justify-content: space-around;
+}
+
+#close{
+	margin-left: 30%;
 }
 
 #research{
@@ -187,22 +208,12 @@ h3{
     padding-right: 4px;
 }
 
-label{
-    display: block;
-    float: left;
-    width: 150px;
-}
-
 form{
     margin-top: 10px;
 }
 
 #sub, #tot{
     margin-left: 40%;
-}
-
-#tot {
-	margin-top:40%;
 }
 
 input{
@@ -215,6 +226,11 @@ input{
     box-shadow: 2px 2px 10px darkgray;
 	background-color: #f5f5f5;
 	justify-content: space-around;
+	max-height: 200px;
+}
+
+#creation input {
+	min-width: 60%;
 }
 
 #caisse{
@@ -230,14 +246,12 @@ input{
 	border: solid 1px;
     padding: 5px;
     box-shadow: 2px 2px 10px darkgray;
-    width: 35%;
     text-align: center;
     background-color: #f5f5f5;
 	justify-content: space-around;
 }
 
 #total{
-    margin-bottom: 10%;
     margin-top: 0;
     border: solid 1px;
     padding: 5px;
@@ -246,7 +260,7 @@ input{
 }
 
 #caisse button{
-    margin-top:5%;
+    margin-top: 10px;
 }
 
 #caisse h3{
@@ -259,6 +273,27 @@ input{
 }
 
 #slide{
-    z-index: 100;
-    background-color: #fff;
+    list-style: none;
+	z-index: 100;
+    background-color: #fafbfc;
+	margin: 0;
+	padding: 0;
+	border: 1px solid;
+	font-size: small;
+	position: absolute;
+}
+.nameLi{
+	background-color: #fafbfc;
+	padding: 5px;
+}
+#titleSearch, .nameLi:hover{
+	padding: 5px;
+	font-weight: bold;
+	background-color: #24292e;
+	color: #fafbfc;
+}
+
+#names{
+	margin-top: 5px;
+	min-width: 225px;
 }

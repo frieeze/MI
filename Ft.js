@@ -50,10 +50,11 @@ testCom.save();
 testCom = new allTran({num: 1,soldeAv: 1000, prix: 12, soldeAp: 1000-12*3});
 testCom.save();*/
 
+
 var uid = ""; 
 console.log(uid); 
 var SerialPort = require('serialport');
-const ByteLength = SerialPort.parsers.ByteLength
+const ByteLength = SerialPort.parsers.ByteLength;
 const Readline = SerialPort.parsers.Readline;
 var port = new SerialPort('/dev/ttyACM0', {
 	baudRate: 9600	
@@ -67,7 +68,6 @@ parser.on('data', function(data){
 		console.log(uid); 
 	}
 });
-
 
 io.on('connection', function(socket){
 	socket.on('accNum', function(info){
@@ -142,7 +142,6 @@ io.on('connection', function(socket){
 			socket.emit('done', {msg: "compte et carte synchronisés"});
 		});
 	});
-
 	socket.on('checkNFC', function(info){
 		console.log('check recieved');
 		if(change == 1){

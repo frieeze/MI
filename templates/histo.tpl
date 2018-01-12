@@ -3,7 +3,7 @@
 	<tr>
 		<th>Date</th>
 		<th>Solde Prec</th>
-		<th>Débit</th>
+		<th>Transaction</th>
 		<th>Nouv Solde</th>
 	</tr>
 {{#each this}}

@@ -26,7 +26,7 @@ require(["socketio","handlebars","jquery","text!templates/buttons.tpl","text!tem
 function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templResearch, templAccount, templList, templNames, AccountController, ListController/*, StocksController*/) {
     
     var socket = io.connect('http://localhost:8080'); 
-    var password = "MaisonISEN";
+    var password = "admin";/*"MaisonISEN";*/
     var serveur = false;
     var entryNFC = false;
     var currentAccount = undefined;
@@ -67,6 +67,7 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
 
     if(readCookie('admin') == 'null' || readCookie('admin') == 'false'){
         admin = false;
+		$("#delog").hide();
     }
     else if(readCookie('admin') == 'true'){
         admin = true;
@@ -359,14 +360,14 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     
     $("#serveur").on('click', function(){
         if(serveur){
-            serveur = false;
-            $("#serv").empty();
-            $("#serv").html("Non");
+			serveur = false;
+			$("#serveur").css("color","red");
+            $("#serveur").html("Tarifs Serveurs Désactivés");
         }
         else{
             serveur = true;
-            $("#serv").empty();
-            $("#serv").html("Oui");
+			$("#serveur").css("color", "green");
+            $("#serveur").html("Tarifs Serveurs Activés");
         }
     });
     
@@ -559,6 +560,10 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
 
     socket.on('accNameRep', function(sockets){
         $("#names").html(templateNames(sockets.account));
+		$(".nameLi").hide();
+		$("#titleSearch").mouseover(function(){
+            $(".nameLi").slideToggle('medium');
+        });
         $(".nameLi").on('click', function(){
             socket.emit('accNum', {num : $(this).attr('id')});
             $("#names").empty();
@@ -658,6 +663,11 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
         entryNFC = true;
     });
     
+    socket.on('newNFC', function(data){
+        entryNFC = false;
+        socket.emit('NFC', {num : currentAccount.numberAccount, carte: data.carte});
+        window.alert("Carte ajoutée");
+    })
     
 
     socket.on('accCreateRep', function(data){
@@ -683,6 +693,9 @@ function(io,Handlebars,$,templButtons, templCount, templHisto, templRecap, templ
     });
         
     $("#create").on('click', function(){
+        if($('#nomCreate').val() == '' || $('#prenomCreate').val() == '' || $('#promoCreate').val() == '' || $('#soldeCreate').val() == ''){
+            return;
+        }
         console.log("test");
         socket.emit('accCreate', {nom : $('#nomCreate').val(),prenom : $('#prenomCreate').val(),promo : $('#promoCreate').val()});
     });

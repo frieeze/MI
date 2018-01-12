@@ -8,20 +8,28 @@
 	</head>
 	<body>
         <header>
-            <a id="Accueil" href="./index.html">Maison ISEN</a> <span id="logged">Vendeur</span>  <span id="mdp">Mot de passe : </span> <input id ="password" type="password" name="password" text="password"/><img src="assets/shutdown.png" width="20px" height="20px" id="delog">
-            <a href="./list.html">Comptes</a>  <a href="./stocks.html">Stocks</a> <a href="./list.html">Créer Compte</a>
+            <a id="Accueil" href="./index.html">Maison ISEN</a>
+            <a href="./list.html">Comptes</a>
+			<a href="./stocks.html">Stocks</a>
+			<a href="./list.html">Créer Compte</a>
+			<span id="logged">Vendeur</span>
+			<span id="mdp">Mot de passe : </span>
+			<input id ="password" type="password" name="password" text="password" placeholder="Connexion Admin"/>
+			<img src="assets/shutdown.png" width="20px" height="20px" id="delog">
         </header>
         <div id="content">
-            <div id="creation" class="table">
-                <h3>Saisie d'un Nouveau Compte</h3>
-                <div>
-                    <input type="text" id="nomCreate" placeholder="Nom"/> <br/>
-                    <input type="text" id="prenomCreate" placeholder="Prénom"/> <br/>
-                    <input type="text" placeholder="Promo" id="promoCreate"/> <br/>
-                    <input type="text" placeholder="Solde" id="soldeCreate"/> <br/>
-                    <button id="create" >Créer</button> <br/>
-                </div>
-            </div>
+			<div>
+				<div id="creation" class="table">
+					<h3>Saisie d'un Nouveau Compte</h3>
+					<div>
+						<input type="text" id="nomCreate" placeholder="Nom"/> <br/>
+						<input type="text" id="prenomCreate" placeholder="Prénom"/> <br/>
+						<input type="number" placeholder="Promo" min="0" id="promoCreate"/> <br/>
+						<input type="number" placeholder="Solde" min="-4" id="soldeCreate"/> <br/>
+						<button id="create" >Créer</button> <br/>
+					</div>
+				</div>
+			</div>
             <div id="list" class="table">
             </div>
         </div>

@@ -8,24 +8,28 @@
 	</head>
 	<body>
         <header>
-            <a id="Accueil" href="./index.html">Maison ISEN</a> <span id="logged">Vendeur</span>  <span id="mdp">Mot de passe : </span> <input id ="password" type="password" name="password" text="password"/><img src="assets/shutdown.png" width="20px" height="20px" id="delog">
-            <a href="./list.html">Comptes</a>  <a href="./stocks.html">Stocks</a> <a href="./list.html">Créer Compte</a>
+            <a id="Accueil" href="./index.html">Maison ISEN</a>
+            <a href="./list.html">Comptes</a>
+			<a href="./stocks.html">Stocks</a>
+			<a href="./list.html">Créer Compte</a>
+			<span id="logged">Vendeur</span>
+			<span id="mdp">Mot de passe : </span>
+			<input id ="password" type="password" name="password" text="password" placeholder="Connexion Admin"/>
+			<img src="assets/shutdown.png" width="20px" height="20px" id="delog">
         </header>
         <div id="page">
-            <div id="research">
-            
-            </div>
-            <div id="account">
-            
-            </div>
+            <div id="research"></div>
+            <div id="account"></div>
             <div id="content">
                 <div class="table" id="buttons"></div>
 				<div id="content2">
 					<div class="table" id="recap"></div>
 					<div id="caisse"><h3>Caisse</h3>
-						<span id="tot"> Total : <span id="total">0</span> €</span><br/>
+						<span id="tot"> Total : <span id="total">0</span> €</span>
+						<div class="btnDisplay">
 						<button id="liquide">Liquide</button> <button id="payer">Payer</button> <button id="cancel">Annuler</button>
-						<br/><button id="serveur" name="serveur">Tarif Serveur</button> <span id="serv">Non</span>
+						</div>
+						<button id="serveur" name="serveur">Tarifs Serveurs Désactivés</button>
 					</div>
 				</div>
 				<div class="table" id="histo"></div>
